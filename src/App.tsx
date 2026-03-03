@@ -7,6 +7,7 @@ const HomePage = lazy(() => import('@/pages/HomePage'));
 const CreatePage = lazy(() => import('@/pages/CreatePage'));
 const RefinePage = lazy(() => import('@/pages/RefinePage'));
 const ExportPage = lazy(() => import('@/pages/ExportPage'));
+const DocsPage = lazy(() => import('@/pages/DocsPage'));
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
             <Route path="/create" element={<CreatePage />} />
             <Route path="/create/results" element={<RefinePage />} />
             <Route path="/create/export" element={<ExportPage />} />
+            <Route path="/docs" element={<DocsPage />} />
           </Routes>
         </Suspense>
         <Footer />

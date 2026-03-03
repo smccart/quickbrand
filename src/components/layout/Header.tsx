@@ -10,6 +10,12 @@ export function Header() {
         </Link>
         <nav className="ml-auto flex items-center gap-4">
           <Link
+            to="/docs"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Docs
+          </Link>
+          <Link
             to="/create"
             className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >

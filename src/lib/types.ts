@@ -30,3 +30,22 @@ export interface LogoVariation {
 
 export type LayoutDirection = 'horizontal' | 'vertical';
 export type ColorMode = 'light' | 'dark';
+
+export interface FaviconAsset {
+  filename: string;
+  blob: Blob;
+  mimeType: string;
+  size?: number;
+}
+
+export interface FaviconBundle {
+  assets: FaviconAsset[];
+  htmlSnippet: string;
+  manifestJson: string;
+}
+
+export interface SocialCardBundle {
+  light: Blob;
+  dark: Blob;
+  metaTags: string;
+}
