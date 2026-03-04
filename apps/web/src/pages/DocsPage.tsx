@@ -38,7 +38,7 @@ export default function DocsPage() {
         <div className="container mx-auto max-w-3xl">
           <h1 className="text-4xl font-bold tracking-tight mb-4">Documentation</h1>
           <p className="text-lg text-muted-foreground mb-6">
-            Learn how AgentKit works and how to use its services.
+            Learn how FetchKit works and how to use its services.
           </p>
           <nav className="flex flex-wrap gap-2">
             {TOC.map((item) => (
@@ -58,7 +58,7 @@ export default function DocsPage() {
       <Section id="overview" title="Overview" muted>
         <div className="space-y-6">
           <p className="text-muted-foreground">
-            AgentKit is a free, open-source platform that provides production-ready assets
+            FetchKit is a free, open-source platform that provides production-ready assets
             and configurations for new projects. It's designed to be used by both developers
             and AI agents — every service is available through a web UI and will soon be
             accessible via REST API and MCP server.
@@ -71,7 +71,7 @@ export default function DocsPage() {
               config, and security headers — ready to paste into your codebase.
             </p>
             <p className="text-muted-foreground">
-              <strong>AI agents</strong> that need to scaffold real projects. AgentKit's API
+              <strong>AI agents</strong> that need to scaffold real projects. FetchKit's API
               lets agents programmatically request assets without scraping websites or
               generating them from scratch.
             </p>
@@ -93,13 +93,13 @@ export default function DocsPage() {
         <div className="space-y-6">
           <p className="text-muted-foreground">
             The brand service generates a complete visual identity from just a company name.
-            It's the first AgentKit service and is fully available now.
+            It's the first FetchKit service and is fully available now.
           </p>
           <div className="space-y-2">
             <h3 className="text-lg font-semibold">How it works</h3>
             <ol className="text-muted-foreground space-y-2 list-decimal list-inside">
               <li>Enter your company name on the <Link to="/create" className="text-primary underline underline-offset-4">Create</Link> page</li>
-              <li>AgentKit searches 200,000+ icons from Iconify, picks from 15 curated Google Fonts, and generates color palettes</li>
+              <li>FetchKit searches 200,000+ icons from Iconify, picks from 15 curated Google Fonts, and generates color palettes</li>
               <li>30 unique logo variations are created by combining these elements</li>
               <li>Select a logo, customize the icon, font, and per-letter colors</li>
               <li>Export SVGs, favicons, social cards, and design tokens</li>
@@ -152,17 +152,17 @@ export default function DocsPage() {
       <Section id="architecture" title="Architecture" muted>
         <div className="space-y-6">
           <p className="text-muted-foreground">
-            AgentKit is a TypeScript monorepo built with Turborepo and pnpm workspaces.
+            FetchKit is a TypeScript monorepo built with Turborepo and pnpm workspaces.
             Each service is a standalone package that can be used independently.
           </p>
           <div className="space-y-2">
             <h3 className="text-lg font-semibold">Package structure</h3>
             <div className="border rounded-lg bg-muted/30 p-4 font-mono text-sm text-muted-foreground">
-              <pre>{`agentkit/
+              <pre>{`fetchkit/
 ├── apps/
 │   └── web/              → React UI (this site)
 ├── packages/
-│   └── brand/            → @agentkit/brand (logo, favicon, tokens)
+│   └── brand/            → @fetchkit/brand (logo, favicon, tokens)
 │   └── tsconfig/         → shared TypeScript config
 │   └── eslint-config/    → shared ESLint config
 ├── turbo.json
@@ -174,7 +174,7 @@ export default function DocsPage() {
             <ul className="text-muted-foreground space-y-1 list-disc list-inside">
               <li><strong>Universal packages</strong> — core logic runs in both Node.js and browsers with zero DOM dependencies</li>
               <li><strong>Client-side first</strong> — the web UI processes everything locally, no data leaves your machine</li>
-              <li><strong>Composable</strong> — install <code className="text-xs bg-muted px-1.5 py-0.5 rounded">@agentkit/brand</code> as an npm package, or use the web UI, or call the API</li>
+              <li><strong>Composable</strong> — install <code className="text-xs bg-muted px-1.5 py-0.5 rounded">@fetchkit/brand</code> as an npm package, or use the web UI, or call the API</li>
               <li><strong>Developer-friendly outputs</strong> — every asset is designed for copy-paste integration</li>
             </ul>
           </div>
@@ -188,7 +188,7 @@ export default function DocsPage() {
             Coming Soon
           </div>
           <p className="text-muted-foreground">
-            AgentKit will offer two programmatic interfaces so AI agents and scripts can
+            FetchKit will offer two programmatic interfaces so AI agents and scripts can
             request assets without using the web UI.
           </p>
           <div className="space-y-2">
@@ -211,7 +211,7 @@ export default function DocsPage() {
             <h3 className="text-lg font-semibold">MCP Server</h3>
             <p className="text-muted-foreground">
               A Model Context Protocol server for native integration with Claude and other
-              AI assistants. Agents will be able to call AgentKit tools directly within
+              AI assistants. Agents will be able to call FetchKit tools directly within
               their workflow.
             </p>
           </div>
@@ -223,7 +223,7 @@ export default function DocsPage() {
         <div className="space-y-6">
           {[
             {
-              q: 'Is AgentKit free?',
+              q: 'Is FetchKit free?',
               a: 'Yes, completely free. No accounts, no paywalls, no limits. The web UI runs entirely in your browser.',
             },
             {
@@ -239,8 +239,8 @@ export default function DocsPage() {
               a: 'No. Everything runs client-side in your browser. The only external requests are to Google Fonts (for font loading) and Iconify (for icon data). Your project data never leaves your machine.',
             },
             {
-              q: 'Can I self-host AgentKit?',
-              a: 'Yes. AgentKit is MIT licensed and fully open source. Clone the repo, install dependencies, and deploy wherever you like.',
+              q: 'Can I self-host FetchKit?',
+              a: 'Yes. FetchKit is MIT licensed and fully open source. Clone the repo, install dependencies, and deploy wherever you like.',
             },
             {
               q: 'When will the API be available?',

@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import { Icon } from '@iconify/react';
-import type { LogoConfig, LayoutDirection } from '@agentkit/brand';
+import type { LogoConfig, LayoutDirection } from '@fetchkit/brand';
 
 interface LogoCanvasProps {
   config: LogoConfig;

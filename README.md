@@ -1,12 +1,12 @@
-# AgentKit
+# FetchKit
 
 Free scaffolding-as-a-service for developers and AI agents.
 
-AgentKit generates production-ready assets — brand kits, and more coming — so you can focus on building. Enter a name, get assets. No account, no paywall, open source.
+FetchKit generates production-ready assets — brand kits, and more coming — so you can focus on building. Enter a name, get assets. No account, no paywall, open source.
 
 ## What It Does Today
 
-### Brand Service (`@agentkit/brand`)
+### Brand Service (`@fetchkit/brand`)
 
 Enter a company name, get a complete brand identity kit:
 
@@ -46,11 +46,11 @@ See [VISION.md](VISION.md) for the full roadmap.
 
 ```
 packages/
-├── brand/              @agentkit/brand — core brand generation logic (pure TS)
-├── tsconfig/           @agentkit/tsconfig — shared TypeScript configs
-└── eslint-config/      @agentkit/eslint-config — shared linting
+├── brand/              @fetchkit/brand — core brand generation logic (pure TS)
+├── tsconfig/           @fetchkit/tsconfig — shared TypeScript configs
+└── eslint-config/      @fetchkit/eslint-config — shared linting
 apps/
-└── web/                @agentkit/web — web UI (React + Vite)
+└── web/                @fetchkit/web — web UI (React + Vite)
 ```
 
 ## Development

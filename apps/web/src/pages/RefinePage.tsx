@@ -6,7 +6,7 @@ import { LogoCanvas } from '@/components/LogoCanvas';
 import { IconPicker } from '@/components/IconPicker';
 import { FontPicker } from '@/components/FontPicker';
 import { ColorEditor } from '@/components/ColorEditor';
-import type { LogoVariation, LogoConfig, FontConfig, IconConfig, ColorPalette } from '@agentkit/brand';
+import type { LogoVariation, LogoConfig, FontConfig, IconConfig, ColorPalette } from '@fetchkit/brand';
 
 export default function RefinePage() {
   const location = useLocation();

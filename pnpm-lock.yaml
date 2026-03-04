@@ -14,7 +14,7 @@ importers:
 
   apps/web:
     dependencies:
-      '@agentkit/brand':
+      '@fetchkit/brand':
         specifier: workspace:*
         version: link:../../packages/brand
       '@iconify/react':
@@ -48,10 +48,10 @@ importers:
         specifier: ^3.5.0
         version: 3.5.0
     devDependencies:
-      '@agentkit/eslint-config':
+      '@fetchkit/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
-      '@agentkit/tsconfig':
+      '@fetchkit/tsconfig':
         specifier: workspace:*
         version: link:../../packages/tsconfig
       '@tailwindcss/vite':
@@ -97,7 +97,7 @@ importers:
         specifier: ^1.3.4
         version: 1.3.4
     devDependencies:
-      '@agentkit/tsconfig':
+      '@fetchkit/tsconfig':
         specifier: workspace:*
         version: link:../tsconfig
       '@types/opentype.js':

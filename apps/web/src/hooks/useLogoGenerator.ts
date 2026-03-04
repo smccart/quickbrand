@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react';
-import type { LogoVariation, LogoConfig, FontConfig, IconConfig, ColorPalette } from '@agentkit/brand';
-import { generateLogos, CURATED_FONTS } from '@agentkit/brand';
+import type { LogoVariation, LogoConfig, FontConfig, IconConfig, ColorPalette } from '@fetchkit/brand';
+import { generateLogos, CURATED_FONTS } from '@fetchkit/brand';
 import { loadAllFonts } from '@/lib/browser';
 
 interface UseLogoGeneratorReturn {

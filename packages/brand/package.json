@@ -1,5 +1,5 @@
 {
-  "name": "@agentkit/brand",
+  "name": "@fetchkit/brand",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -26,7 +26,7 @@
     "opentype.js": "^1.3.4"
   },
   "devDependencies": {
-    "@agentkit/tsconfig": "workspace:*",
+    "@fetchkit/tsconfig": "workspace:*",
     "@types/opentype.js": "^1.3.9",
     "typescript": "~5.9.3",
     "vite": "^7.3.1",

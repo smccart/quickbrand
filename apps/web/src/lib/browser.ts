@@ -2,7 +2,7 @@
  * Browser-only functions that depend on DOM/Canvas APIs.
  * These cannot run in Node.js and stay in the web app.
  */
-import type { LogoConfig, LayoutDirection, ColorMode, FaviconAsset, FaviconBundle, SocialCardBundle, FontConfig } from '@agentkit/brand';
+import type { LogoConfig, LayoutDirection, ColorMode, FaviconAsset, FaviconBundle, SocialCardBundle, FontConfig } from '@fetchkit/brand';
 import {
   buildExportSvg,
   buildFaviconSvg,
@@ -12,7 +12,7 @@ import {
   fetchIconSvg,
   getDarkModeColors,
   generateOgMetaTags,
-} from '@agentkit/brand';
+} from '@fetchkit/brand';
 
 // --- Font loading (browser) ---
 

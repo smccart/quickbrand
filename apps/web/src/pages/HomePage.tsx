@@ -49,7 +49,7 @@ export default function HomePage() {
             Scaffolding as a Service
           </h1>
           <p className="text-xl text-muted-foreground">
-            AgentKit gives developers and AI agents instant access to production-ready
+            FetchKit gives developers and AI agents instant access to production-ready
             assets — brand kits, legal docs, SEO configs, and more. Free, open source,
             no sign-up required.
           </p>

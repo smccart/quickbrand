@@ -1,3 +1,3 @@
-import config from '@agentkit/eslint-config'
+import config from '@fetchkit/eslint-config'
 
 export default config

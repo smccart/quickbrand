@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { LogoCanvas } from './LogoCanvas';
 import { useExport } from '@/hooks/useExport';
-import type { LogoConfig } from '@agentkit/brand';
+import type { LogoConfig } from '@fetchkit/brand';
 
 interface ExportPanelProps {
   config: LogoConfig;

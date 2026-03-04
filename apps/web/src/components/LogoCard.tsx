@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Card } from '@/components/ui/card';
 import { LogoCanvas } from './LogoCanvas';
-import type { LogoVariation } from '@agentkit/brand';
+import type { LogoVariation } from '@fetchkit/brand';
 
 interface LogoCardProps {
   variation: LogoVariation;

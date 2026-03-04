@@ -1,5 +1,5 @@
 {
-  "buildCommand": "pnpm turbo build --filter=@agentkit/web",
+  "buildCommand": "pnpm turbo build --filter=@fetchkit/web",
   "outputDirectory": "apps/web/dist",
   "framework": "vite",
   "rewrites": [

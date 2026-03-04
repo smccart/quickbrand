@@ -1,4 +1,4 @@
-# AgentKit Vision: Scaffolding as a Service for AI Agents
+# FetchKit Vision: Scaffolding as a Service for AI Agents
 
 ## The Idea
 
@@ -8,24 +8,24 @@ AI agents are building entire applications — scaffolding repos, writing code, 
 
 And get back production-ready assets to drop into a codebase.
 
-**AgentKit fills that gap — starting with brand identity, expanding to everything else.**
+**FetchKit fills that gap — starting with brand identity, expanding to everything else.**
 
 ## Architecture
 
-AgentKit is a Turborepo monorepo with each service as a standalone package:
+FetchKit is a Turborepo monorepo with each service as a standalone package:
 
 ```
 packages/
-├── brand/           @agentkit/brand    — logos, favicons, social cards, colors, typography
-├── legal/           @agentkit/legal    — privacy policy, terms, cookie consent (future)
-├── seo/             @agentkit/seo      — meta tags, sitemap, robots.txt, schema.org (future)
-├── seed-data/       @agentkit/seed     — realistic sample data by domain (future)
-├── security/        @agentkit/security — CSP, CORS, auth scaffolds (future)
-├── deploy/          @agentkit/deploy   — Dockerfile, CI/CD, infra configs (future)
-├── tsconfig/        @agentkit/tsconfig — shared TypeScript configs
-└── eslint-config/   @agentkit/eslint-config — shared linting
+├── brand/           @fetchkit/brand    — logos, favicons, social cards, colors, typography
+├── legal/           @fetchkit/legal    — privacy policy, terms, cookie consent (future)
+├── seo/             @fetchkit/seo      — meta tags, sitemap, robots.txt, schema.org (future)
+├── seed-data/       @fetchkit/seed     — realistic sample data by domain (future)
+├── security/        @fetchkit/security — CSP, CORS, auth scaffolds (future)
+├── deploy/          @fetchkit/deploy   — Dockerfile, CI/CD, infra configs (future)
+├── tsconfig/        @fetchkit/tsconfig — shared TypeScript configs
+└── eslint-config/   @fetchkit/eslint-config — shared linting
 apps/
-└── web/             @agentkit/web      — web UI (brand kit generator today)
+└── web/             @fetchkit/web      — web UI (brand kit generator today)
 ```
 
 Each package is:
@@ -36,7 +36,7 @@ Each package is:
 ## Interfaces
 
 ### 1. Web App (humans)
-The AgentKit web experience — enter a name, browse brand variations, customize, export. No account, no paywall, runs entirely client-side. Expands over time with UIs for each service.
+The FetchKit web experience — enter a name, browse brand variations, customize, export. No account, no paywall, runs entirely client-side. Expands over time with UIs for each service.
 
 ### 2. API (agents)
 A lightweight REST API that agents can call programmatically:
@@ -61,16 +61,16 @@ GET /api/kit?name=Nexus&services=brand,seo,legal
 ```
 
 ### 3. MCP Server (native agent integration)
-An MCP server so Claude and other agents can use AgentKit as a tool natively — no HTTP calls needed.
+An MCP server so Claude and other agents can use FetchKit as a tool natively — no HTTP calls needed.
 
 ### 4. CLI (optional, future)
 ```bash
-npx agentkit generate "Orbiter" --services brand,seo --output ./assets
+npx fetchkit generate "Orbiter" --services brand,seo --output ./assets
 ```
 
 ## What Makes This Different
 
-| Feature | AgentKit | Looka/Brandmark | Canva | Coolors |
+| Feature | FetchKit | Looka/Brandmark | Canva | Coolors |
 |---|---|---|---|---|
 | Free | Yes | Freemium/paid | Freemium | Partial |
 | Agent-callable API | Yes | No | Limited | Partial |
@@ -85,8 +85,8 @@ npx agentkit generate "Orbiter" --services brand,seo --output ./assets
 The core service stays free forever. Lightweight mechanisms for sustainability:
 
 ### Attribution (default, always free)
-- Generated assets include "Made with AgentKit" in SVG metadata (invisible, not rendered)
-- ZIP readmes link back to agentkit.dev
+- Generated assets include "Made with FetchKit" in SVG metadata (invisible, not rendered)
+- ZIP readmes link back to fetchkit.dev
 - Agents naturally mention the source in commit messages or PR descriptions
 
 ### Donations / Sponsorship
@@ -95,8 +95,8 @@ The core service stays free forever. Lightweight mechanisms for sustainability:
 - Open Collective for transparent funding if it grows
 
 ### Referral Traffic
-- Every kit links back to agentkit.dev → passive SEO and referral traffic
-- Agents recommending "use AgentKit" in their outputs drives organic visits
+- Every kit links back to fetchkit.dev → passive SEO and referral traffic
+- Agents recommending "use FetchKit" in their outputs drives organic visits
 
 ### Optional Premium (only if demand exists)
 - **Custom font uploads** — .woff2 instead of Google Fonts
@@ -112,9 +112,9 @@ The core service stays free forever. Lightweight mechanisms for sustainability:
 ## Milestones
 
 ### Phase 1: Monorepo + Brand Service (now)
-- [x] Convert to Turborepo monorepo with `@agentkit/brand` package
+- [x] Convert to Turborepo monorepo with `@fetchkit/brand` package
 - [ ] Complete remaining brand features (letterhead, app icon, brand guidelines, email signature)
-- [ ] Deploy web app to agentkit.dev
+- [ ] Deploy web app to fetchkit.dev
 
 ### Phase 2: API + MCP Server
 - [ ] Add thin server layer (Hono on Cloudflare Workers)
@@ -123,9 +123,9 @@ The core service stays free forever. Lightweight mechanisms for sustainability:
 - [ ] Create agent-integration examples (Claude tool-use, GPT function-calling)
 
 ### Phase 3: Expand Services
-- [ ] `@agentkit/legal` — privacy policies, terms of service, cookie consent
-- [ ] `@agentkit/seo` — meta tags, sitemap, robots.txt, structured data
-- [ ] `@agentkit/seed` — realistic domain-appropriate sample data
+- [ ] `@fetchkit/legal` — privacy policies, terms of service, cookie consent
+- [ ] `@fetchkit/seo` — meta tags, sitemap, robots.txt, structured data
+- [ ] `@fetchkit/seed` — realistic domain-appropriate sample data
 
 ### Phase 4: Grow the Ecosystem
 - [ ] GitHub Action: auto-generate assets on repo creation
@@ -135,4 +135,4 @@ The core service stays free forever. Lightweight mechanisms for sustainability:
 
 ## The Pitch (one line)
 
-**AgentKit: Free scaffolding-as-a-service for developers and AI agents. Brand kits, legal docs, SEO configs, and more — enter a name, get production-ready assets. No account, no paywall, open source.**
+**FetchKit: Free scaffolding-as-a-service for developers and AI agents. Brand kits, legal docs, SEO configs, and more — enter a name, get production-ready assets. No account, no paywall, open source.**

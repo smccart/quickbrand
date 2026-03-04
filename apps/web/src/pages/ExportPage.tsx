@@ -8,7 +8,7 @@ import { DesignTokensPanel } from '@/components/DesignTokensPanel';
 import { SocialCardPanel } from '@/components/SocialCardPanel';
 import { useFavicon } from '@/hooks/useFavicon';
 import { useSocialCards } from '@/hooks/useSocialCards';
-import type { LogoConfig } from '@agentkit/brand';
+import type { LogoConfig } from '@fetchkit/brand';
 
 export default function ExportPage() {
   const location = useLocation();

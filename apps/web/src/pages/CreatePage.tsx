@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { CompanyNameInput } from '@/components/CompanyNameInput';
-import { generateLogos, CURATED_FONTS } from '@agentkit/brand';
+import { generateLogos, CURATED_FONTS } from '@fetchkit/brand';
 import { loadAllFonts } from '@/lib/browser';
 
 export default function CreatePage() {

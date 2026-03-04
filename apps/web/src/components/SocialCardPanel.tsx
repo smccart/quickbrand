@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import type { SocialCardBundle } from '@agentkit/brand';
+import type { SocialCardBundle } from '@fetchkit/brand';
 
 interface SocialCardPanelProps {
   cards: SocialCardBundle | null;

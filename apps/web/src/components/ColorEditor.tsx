@@ -1,5 +1,5 @@
-import { PALETTE_TEMPLATES, assignLetterColors, assignMonochromeColors } from '@agentkit/brand';
-import type { ColorPalette } from '@agentkit/brand';
+import { PALETTE_TEMPLATES, assignLetterColors, assignMonochromeColors } from '@fetchkit/brand';
+import type { ColorPalette } from '@fetchkit/brand';
 
 interface ColorEditorProps {
   companyName: string;

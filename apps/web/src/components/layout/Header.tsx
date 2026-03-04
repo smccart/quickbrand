@@ -16,7 +16,7 @@ export function Header() {
       <div className="container mx-auto flex h-14 items-center px-6">
         <Link to="/" className="flex items-center gap-2 font-bold text-lg">
           <Bot className="h-5 w-5 text-primary" />
-          <span>AgentKit</span>
+          <span>FetchKit</span>
         </Link>
         <nav className="ml-8 flex items-center gap-1">
           {NAV_ITEMS.map((item) => (

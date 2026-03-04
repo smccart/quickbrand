@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { LogoConfig, SocialCardBundle } from '@agentkit/brand';
+import type { LogoConfig, SocialCardBundle } from '@fetchkit/brand';
 import { generateSocialCards, downloadSocialCardZip } from '@/lib/browser';
 
 interface UseSocialCardsReturn {

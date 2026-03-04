@@ -1,5 +1,5 @@
-import { CURATED_FONTS } from '@agentkit/brand';
-import type { FontConfig } from '@agentkit/brand';
+import { CURATED_FONTS } from '@fetchkit/brand';
+import type { FontConfig } from '@fetchkit/brand';
 
 interface FontPickerProps {
   currentFont: FontConfig;

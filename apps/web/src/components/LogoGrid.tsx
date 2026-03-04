@@ -1,5 +1,5 @@
 import { LogoCard } from './LogoCard';
-import type { LogoVariation } from '@agentkit/brand';
+import type { LogoVariation } from '@fetchkit/brand';
 
 interface LogoGridProps {
   variations: LogoVariation[];

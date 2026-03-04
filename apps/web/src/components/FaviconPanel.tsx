@@ -1,7 +1,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import type { FaviconAsset, FaviconBundle } from '@agentkit/brand';
+import type { FaviconAsset, FaviconBundle } from '@fetchkit/brand';
 
 interface FaviconPanelProps {
   bundle: FaviconBundle | null;

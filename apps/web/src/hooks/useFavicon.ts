@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { LogoConfig, FaviconAsset, FaviconBundle } from '@agentkit/brand';
+import type { LogoConfig, FaviconAsset, FaviconBundle } from '@fetchkit/brand';
 import { generateFaviconBundle, downloadFaviconZip } from '@/lib/browser';
 
 interface UseFaviconReturn {

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { LogoConfig, LayoutDirection, ColorMode } from '@agentkit/brand';
+import type { LogoConfig, LayoutDirection, ColorMode } from '@fetchkit/brand';
 import { downloadSvg, downloadAllSvgs } from '@/lib/browser';
 
 interface UseExportReturn {

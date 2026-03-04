@@ -1,8 +1,8 @@
 import { useState, useCallback } from 'react';
 import { Icon } from '@iconify/react';
 import { Input } from '@/components/ui/input';
-import { searchIcons } from '@agentkit/brand';
-import type { IconConfig } from '@agentkit/brand';
+import { searchIcons } from '@fetchkit/brand';
+import type { IconConfig } from '@fetchkit/brand';
 
 interface IconPickerProps {
   currentIcon: IconConfig;
