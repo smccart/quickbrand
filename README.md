@@ -1,76 +1,65 @@
-# QuickBrand
+# AgentKit
 
-Rapid brand identity generation for developers who ship fast.
+Free scaffolding-as-a-service for developers and AI agents.
 
-You're spinning up side projects, MVPs, and experiments constantly. Each one needs a logo, a favicon, consistent colors, maybe a letterhead or social card. You don't need a designer for every throwaway project — you need something that generates a decent, consistent branding kit in under a minute.
-
-QuickBrand is that tool. Enter a name, get a full set of brand assets. Not award-winning design — functional, consistent, good-enough branding that lets you focus on building.
+AgentKit generates production-ready assets — brand kits, and more coming — so you can focus on building. Enter a name, get assets. No account, no paywall, open source.
 
 ## What It Does Today
 
-**Logo Generator** — Enter a company name, get 30 variations combining:
-- Icons from Iconify (200,000+ icons)
-- Curated display fonts from Google Fonts
-- Harmonious color palettes applied per-letter and to the icon
-- Horizontal and vertical layouts
-- SVG exports for both light and dark backgrounds (text converted to paths, fully self-contained)
+### Brand Service (`@agentkit/brand`)
 
-## What's Coming
+Enter a company name, get a complete brand identity kit:
 
-The goal is a complete branding kit from a single input. Planned assets:
+- **Logo Generator** — 30 variations from Iconify icons + Google Fonts + color palettes. SVG exports with text-to-path (horizontal/vertical, light/dark).
+- **Favicon Generator** — SVG, ICO, PNG (16/32/48/180/192/512), manifest.json, HTML snippet.
+- **Social Cards** — 1200x630 og:image PNGs (light + dark), meta tags.
+- **Color System** — CSS custom properties, Tailwind config, JSON design tokens.
+- **Typography Config** — CSS font declaration, Google Fonts link, Tailwind config.
 
-- **Favicon** — Generate .ico, .png (16/32/48/180/192/512), and SVG favicons from your logo icon + colors. Include manifest.json and HTML meta tags ready to paste.
-- **Social Cards / OG Images** — Generate og:image and twitter:card templates (1200x630) with your logo, name, and brand colors. PNG and SVG.
-- **Color System** — Export your palette as CSS custom properties, Tailwind theme config, and design tokens. Include semantic mappings (primary, secondary, accent, destructive, muted).
-- **Typography Config** — Export font-family CSS, Google Fonts `<link>` tags, and Tailwind font config. Include recommended size scale and line heights.
-- **Letterhead / Doc Header** — Simple header template with logo + company name for docs, invoices, READMEs.
-- **App Icon** — Square format icon (for PWA, app stores, desktop shortcuts) in all required sizes.
-- **Brand Guidelines Sheet** — Single-page PDF/SVG summarizing the logo, colors, fonts, and usage rules. Drop it in your repo as `BRAND.md` or `brand-guidelines.pdf`.
-- **Email Signature** — HTML email signature block with logo, name, and brand colors.
+### What's Coming
+
+- **Legal** — Privacy policies, terms of service, cookie consent
+- **SEO** — Meta tags, sitemap, robots.txt, structured data
+- **Seed Data** — Realistic domain-appropriate sample data
+- **Security** — CSP headers, CORS config, auth scaffolds
+- **Deploy** — Dockerfiles, CI/CD, infrastructure configs
+
+See [VISION.md](VISION.md) for the full roadmap.
 
 ## Philosophy
 
-- **Speed over perfection** — A consistent brand kit in 60 seconds beats a perfect one in 60 hours.
-- **Developer-first** — Outputs are code-friendly: SVGs, CSS variables, Tailwind configs, copy-paste HTML snippets.
-- **No accounts, no paywalls** — Everything runs client-side. No backend, no sign-up, no tracking.
-- **Consistency** — Every asset shares the same icon, colors, and typography. Change one, regenerate all.
+- **Speed over perfection** — A brand kit in 60 seconds beats a perfect one in 60 hours.
+- **Developer-first** — Outputs are code-friendly: SVGs, CSS variables, Tailwind configs, copy-paste snippets.
+- **Agent-first** — Every service is a standalone package callable by AI agents via API or MCP.
+- **No accounts, no paywalls** — Client-side web app. No backend, no sign-up, no tracking.
 
 ## Tech Stack
 
-- React 19 + TypeScript
-- Vite
-- Tailwind CSS 4
-- shadcn/ui
+- Turborepo + pnpm workspaces
+- React 19 + TypeScript + Vite
+- Tailwind CSS 4 + shadcn/ui
 - Iconify (icon search + rendering)
-- opentype.js (font parsing + SVG text-to-path for exports)
+- opentype.js (font parsing + SVG text-to-path)
 - JSZip (bundle downloads)
+
+## Project Structure
+
+```
+packages/
+├── brand/              @agentkit/brand — core brand generation logic (pure TS)
+├── tsconfig/           @agentkit/tsconfig — shared TypeScript configs
+└── eslint-config/      @agentkit/eslint-config — shared linting
+apps/
+└── web/                @agentkit/web — web UI (React + Vite)
+```
 
 ## Development
 
 ```bash
 pnpm install
-pnpm dev
-```
-
-## Project Structure
-
-```
-src/
-├── lib/                    # Core engine (pure TypeScript, no React)
-│   ├── types.ts            # Shared type definitions
-│   ├── fonts.ts            # Curated font list + dynamic loading
-│   ├── icons.ts            # Iconify API search + SVG fetching
-│   ├── colors.ts           # Color palettes + per-letter assignment
-│   ├── generator.ts        # Combination algorithm (→ 30 variations)
-│   ├── svg-builder.ts      # Preview SVG composition
-│   └── svg-export.ts       # Export SVG with text-to-path conversion
-├── pages/
-│   ├── HomePage.tsx         # Marketing landing page
-│   ├── CreatePage.tsx       # Enter company name
-│   ├── RefinePage.tsx       # Browse + customize logos
-│   └── ExportPage.tsx       # Preview + download SVGs
-├── components/             # UI components (pickers, grid, canvas, etc.)
-└── hooks/                  # useExport (SVG/ZIP download)
+pnpm dev          # runs all packages via turbo
+pnpm build        # builds brand package, then web app
+pnpm typecheck    # type-check all packages
 ```
 
 ## License
