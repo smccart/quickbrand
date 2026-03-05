@@ -129,11 +129,11 @@ The core service stays free forever. Lightweight mechanisms for sustainability:
 - [ ] Brand guidelines document
 - [ ] Email signature template
 
-### Phase 2: API + MCP Server — ~85% Complete
+### Phase 2: API + MCP Server — ~95% Complete
 - [x] Add REST API (Vercel serverless functions — 12 endpoints)
 - [x] Publish OpenAPI spec (`/api/openapi.json`)
 - [x] Build MCP server package (`@fetchkit/mcp`) — 7 tools, stdio transport
-- [ ] Update `/docs` page with real API documentation (currently says "Coming Soon" despite API being live)
+- [x] Update `/docs` page with real API documentation (12 endpoints + 7 MCP tools documented)
 - [ ] Create agent-integration examples (Claude tool-use, GPT function-calling)
 
 ### Phase 3: Expand Services — Not Started (placeholder pages exist)
@@ -149,7 +149,7 @@ The core service stays free forever. Lightweight mechanisms for sustainability:
 
 ## Next Steps (Recommended Order)
 
-1. **Update `/docs` page with API & MCP documentation** — The API is live but the docs page says "Coming Soon." This is the highest-impact, lowest-effort win. Document all 12 REST endpoints and 7 MCP tools with examples.
+1. ~~**Update `/docs` page with API & MCP documentation**~~ — Done.
 2. **Add agent integration examples** — Claude tool-use and GPT function-calling snippets showing how to call the API and use the MCP server. This completes Phase 2.
 3. **Remaining Phase 1 items** — Letterhead, app icon, brand guidelines, and email signature are nice-to-haves that can be added incrementally.
 4. **Phase 3: `@fetchkit/legal`** — Most universally needed new service. Privacy policies, terms of service, and cookie consent are required by virtually every web project.
