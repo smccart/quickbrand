@@ -19,8 +19,7 @@ export function PlaceholderCard({ image, onDownload }: PlaceholderCardProps) {
   return (
     <div className="border rounded-xl overflow-hidden">
       <div
-        className="w-full bg-muted/30"
-        style={{ aspectRatio: `${image.width}/${image.height}` }}
+        className="w-full bg-muted/30 max-h-48 overflow-hidden [&>svg]:w-full [&>svg]:h-auto [&>svg]:block"
         dangerouslySetInnerHTML={{ __html: image.svg }}
       />
       <div className="p-3 space-y-2">
