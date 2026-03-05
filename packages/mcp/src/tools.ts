@@ -154,9 +154,9 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_placeholder', {
     title: 'Generate Placeholder Image',
     description:
-      'Generate SVG placeholder images for UI mockups. Categories: hero, avatar, product, chart, team, background, pattern, icon-grid.',
+      'Generate SVG placeholder images for UI mockups. Categories: hero, avatar, product, chart, team, background, pattern, icon-grid, screenshot-dashboard, screenshot-table, screenshot-chat, screenshot-editor, screenshot-settings, screenshot-landing.',
     inputSchema: {
-      category: z.enum(['hero', 'avatar', 'product', 'chart', 'team', 'background', 'pattern', 'icon-grid']).describe('Placeholder category'),
+      category: z.enum(['hero', 'avatar', 'product', 'chart', 'team', 'background', 'pattern', 'icon-grid', 'screenshot-dashboard', 'screenshot-table', 'screenshot-chat', 'screenshot-editor', 'screenshot-settings', 'screenshot-landing']).describe('Placeholder category'),
       colors: z.array(z.string()).default([]).describe('Hex colors to use'),
       width: z.number().optional().describe('Width in pixels'),
       height: z.number().optional().describe('Height in pixels'),

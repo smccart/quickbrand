@@ -14,7 +14,7 @@ interface PlaceholderPanelProps {
   onDownloadSingle: (image: PlaceholderImage) => void;
 }
 
-const ALL_CATEGORIES: { value: PlaceholderCategory; label: string }[] = [
+const BASIC_CATEGORIES: { value: PlaceholderCategory; label: string }[] = [
   { value: 'hero', label: 'Hero' },
   { value: 'avatar', label: 'Avatar' },
   { value: 'product', label: 'Product' },
@@ -24,6 +24,16 @@ const ALL_CATEGORIES: { value: PlaceholderCategory; label: string }[] = [
   { value: 'pattern', label: 'Pattern' },
   { value: 'icon-grid', label: 'Icon Grid' },
 ];
+
+const SCREENSHOT_CATEGORIES: { value: PlaceholderCategory; label: string }[] = [
+  { value: 'screenshot-dashboard', label: 'Dashboard' },
+  { value: 'screenshot-table', label: 'Table View' },
+  { value: 'screenshot-chat', label: 'Chat' },
+  { value: 'screenshot-editor', label: 'Editor' },
+  { value: 'screenshot-settings', label: 'Settings' },
+  { value: 'screenshot-landing', label: 'Landing' },
+];
+
 
 export function PlaceholderPanel({
   bundle,
@@ -68,7 +78,23 @@ export function PlaceholderPanel({
         <div className="space-y-1.5">
           <label className="text-sm font-medium">Categories</label>
           <div className="flex flex-wrap gap-1">
-            {ALL_CATEGORIES.map((cat) => (
+            {BASIC_CATEGORIES.map((cat) => (
+              <button
+                key={cat.value}
+                onClick={() => toggleCategory(cat.value)}
+                className={`text-xs px-2.5 py-1.5 rounded-md border transition-colors ${
+                  selectedCategories.includes(cat.value)
+                    ? 'bg-foreground text-background border-foreground'
+                    : 'bg-background text-muted-foreground border-border hover:border-foreground'
+                }`}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+          <label className="text-sm font-medium pt-1">Screenshots</label>
+          <div className="flex flex-wrap gap-1">
+            {SCREENSHOT_CATEGORIES.map((cat) => (
               <button
                 key={cat.value}
                 onClick={() => toggleCategory(cat.value)}

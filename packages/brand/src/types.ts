@@ -142,7 +142,13 @@ export type PlaceholderCategory =
   | 'team'
   | 'background'
   | 'pattern'
-  | 'icon-grid';
+  | 'icon-grid'
+  | 'screenshot-dashboard'
+  | 'screenshot-table'
+  | 'screenshot-chat'
+  | 'screenshot-editor'
+  | 'screenshot-settings'
+  | 'screenshot-landing';
 
 export interface PlaceholderConfig {
   category: PlaceholderCategory;

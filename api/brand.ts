@@ -155,7 +155,7 @@ async function handlePaletteFromName(url: URL): Promise<Response> {
   return json(b.bundlePaletteExport(palette));
 }
 
-const VALID_CATEGORIES = ['hero', 'avatar', 'product', 'chart', 'team', 'background', 'pattern', 'icon-grid'];
+const VALID_CATEGORIES = ['hero', 'avatar', 'product', 'chart', 'team', 'background', 'pattern', 'icon-grid', 'screenshot-dashboard', 'screenshot-table', 'screenshot-chat', 'screenshot-editor', 'screenshot-settings', 'screenshot-landing'];
 
 async function handlePlaceholder(req: Request): Promise<Response> {
   const b = brand;

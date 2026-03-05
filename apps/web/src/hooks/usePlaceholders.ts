@@ -4,6 +4,7 @@ import { generatePlaceholderBundle } from '@fetchkit/brand';
 
 const ALL_CATEGORIES: PlaceholderCategory[] = [
   'hero', 'avatar', 'product', 'chart', 'team', 'background', 'pattern', 'icon-grid',
+  'screenshot-dashboard', 'screenshot-table', 'screenshot-chat', 'screenshot-editor', 'screenshot-settings', 'screenshot-landing',
 ];
 
 interface UsePlaceholdersReturn {

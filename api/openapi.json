@@ -373,7 +373,7 @@
         "type": "object",
         "required": ["category"],
         "properties": {
-          "category": { "type": "string", "enum": ["hero", "avatar", "product", "chart", "team", "background", "pattern", "icon-grid"] },
+          "category": { "type": "string", "enum": ["hero", "avatar", "product", "chart", "team", "background", "pattern", "icon-grid", "screenshot-dashboard", "screenshot-table", "screenshot-chat", "screenshot-editor", "screenshot-settings", "screenshot-landing"] },
           "width": { "type": "integer" },
           "height": { "type": "integer" },
           "colors": { "type": "array", "items": { "type": "string" } },

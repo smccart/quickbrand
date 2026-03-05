@@ -11,6 +11,14 @@ import {
   createNoiseDef,
   createGeometricShapes,
 } from './placeholder-patterns';
+import {
+  buildScreenshotDashboard,
+  buildScreenshotTable,
+  buildScreenshotChat,
+  buildScreenshotEditor,
+  buildScreenshotSettings,
+  buildScreenshotLanding,
+} from './placeholder-screenshots';
 
 const DEFAULT_COLORS = ['#6366f1', '#8b5cf6', '#a78bfa', '#e2e8f0', '#f8fafc'];
 
@@ -23,13 +31,19 @@ const CATEGORY_DEFAULTS: Record<PlaceholderCategory, { w: number; h: number; lab
   background: { w: 1920, h: 1080, label: 'Background', usage: 'Use as full-page background image or texture at 1920x1080.', ratio: '16:9' },
   pattern: { w: 400, h: 400, label: 'Pattern Tile', usage: 'Use as repeating pattern tile for backgrounds or decorative elements at 400x400.', ratio: '1:1' },
   'icon-grid': { w: 600, h: 400, label: 'Icon Grid', usage: 'Use as feature grid or icon showcase placeholder at 600x400.', ratio: '3:2' },
+  'screenshot-dashboard': { w: 1280, h: 800, label: 'Dashboard', usage: 'Use as SaaS dashboard screenshot placeholder at 1280x800.', ratio: '16:10' },
+  'screenshot-table': { w: 1280, h: 800, label: 'Table View', usage: 'Use as data table screenshot placeholder at 1280x800.', ratio: '16:10' },
+  'screenshot-chat': { w: 1280, h: 800, label: 'Chat', usage: 'Use as chat/messaging interface screenshot placeholder at 1280x800.', ratio: '16:10' },
+  'screenshot-editor': { w: 1280, h: 800, label: 'Editor', usage: 'Use as editor/workspace screenshot placeholder at 1280x800.', ratio: '16:10' },
+  'screenshot-settings': { w: 1280, h: 800, label: 'Settings', usage: 'Use as settings/form page screenshot placeholder at 1280x800.', ratio: '16:10' },
+  'screenshot-landing': { w: 1280, h: 800, label: 'Landing Page', usage: 'Use as landing page screenshot placeholder at 1280x800.', ratio: '16:10' },
 };
 
-function c(colors: string[], i: number): string {
+export function c(colors: string[], i: number): string {
   return colors[i % colors.length];
 }
 
-function wrapSvg(w: number, h: number, defs: string, body: string): string {
+export function wrapSvg(w: number, h: number, defs: string, body: string): string {
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" width="${w}" height="${h}"><defs>${defs}</defs>${body}</svg>`;
 }
 
@@ -206,6 +220,24 @@ export function generatePlaceholder(config: PlaceholderConfig): PlaceholderImage
       break;
     case 'icon-grid':
       svg = buildIconGrid(w, h, colors);
+      break;
+    case 'screenshot-dashboard':
+      svg = buildScreenshotDashboard(w, h, colors);
+      break;
+    case 'screenshot-table':
+      svg = buildScreenshotTable(w, h, colors);
+      break;
+    case 'screenshot-chat':
+      svg = buildScreenshotChat(w, h, colors);
+      break;
+    case 'screenshot-editor':
+      svg = buildScreenshotEditor(w, h, colors);
+      break;
+    case 'screenshot-settings':
+      svg = buildScreenshotSettings(w, h, colors);
+      break;
+    case 'screenshot-landing':
+      svg = buildScreenshotLanding(w, h, colors);
       break;
   }
 
