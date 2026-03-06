@@ -34,6 +34,18 @@ cat > .vercel/output/functions/api/legal.func/.vc-config.json << 'VCEOF'
 }
 VCEOF
 
+# Bundle SEO API function
+mkdir -p .vercel/output/functions/api/seo.func
+npx esbuild api/_seo-wrapper.ts --bundle --platform=node --format=cjs --outfile=.vercel/output/functions/api/seo.func/index.js
+
+cat > .vercel/output/functions/api/seo.func/.vc-config.json << 'VCEOF'
+{
+  "runtime": "nodejs20.x",
+  "handler": "index.js",
+  "launcherType": "Nodejs"
+}
+VCEOF
+
 # Build Output API config with rewrites
 cat > .vercel/output/config.json << 'CFGEOF'
 {
@@ -41,6 +53,7 @@ cat > .vercel/output/config.json << 'CFGEOF'
   "routes": [
     { "src": "/api/brand/(.*)", "dest": "/api/brand" },
     { "src": "/api/legal/(.*)", "dest": "/api/legal" },
+    { "src": "/api/seo/(.*)", "dest": "/api/seo" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]

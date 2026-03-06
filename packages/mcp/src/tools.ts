@@ -23,6 +23,8 @@ import {
 import type { ColorHarmony, LayoutDirection, ColorMode, PlaceholderCategory } from '@fetchkit/brand';
 import { generateDocument, generateBundle, LEGAL_DOC_TYPES } from '@fetchkit/legal';
 import type { LegalDocType } from '@fetchkit/legal';
+import { generateArtifact, generateBundle as generateSeoBundle, SEO_ARTIFACT_TYPES } from '@fetchkit/seo';
+import type { SeoArtifactType } from '@fetchkit/seo';
 
 function textResult(data: unknown): { content: Array<{ type: 'text'; text: string }> } {
   return {
@@ -255,6 +257,87 @@ export function registerTools(server: McpServer): void {
     const bundle = generateBundle(types as LegalDocType[], {
       companyName, websiteUrl, contactEmail, jurisdiction, appType, includeGdpr, includeCcpa,
     });
+    return textResult(bundle);
+  });
+
+  // 12. Generate SEO artifact
+  const seoArtifactTypes = Object.keys(SEO_ARTIFACT_TYPES) as SeoArtifactType[];
+  const seoTypeEnum = z.enum(seoArtifactTypes as [string, ...string[]]);
+
+  server.registerTool('generate_seo_artifact', {
+    title: 'Generate SEO Artifact',
+    description:
+      'Generate a single SEO artifact: meta tags (HTML), XML sitemap, robots.txt, or Schema.org JSON-LD structured data.',
+    inputSchema: {
+      type: seoTypeEnum.describe('Artifact type to generate'),
+      siteName: z.string().describe('Site or company name'),
+      siteUrl: z.string().describe('Site URL (e.g. https://example.com)'),
+      title: z.string().optional().describe('Page title (defaults to siteName)'),
+      description: z.string().optional().describe('Meta description'),
+      locale: z.string().default('en_US').describe('Locale (e.g. en_US)'),
+      ogImage: z.string().optional().describe('URL to Open Graph image'),
+      twitterHandle: z.string().optional().describe('Twitter handle (e.g. @company)'),
+      pages: z.array(z.object({
+        path: z.string().describe('URL path (e.g. /about)'),
+        lastmod: z.string().optional().describe('Last modified date (ISO)'),
+        changefreq: z.enum(['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never']).optional(),
+        priority: z.number().optional().describe('Priority 0.0-1.0'),
+      })).optional().describe('Sitemap pages'),
+      robotsConfig: z.object({
+        rules: z.array(z.object({
+          userAgent: z.string(),
+          allow: z.array(z.string()).optional(),
+          disallow: z.array(z.string()).optional(),
+        })).optional(),
+        sitemapUrl: z.string().optional(),
+        crawlDelay: z.number().optional(),
+      }).optional().describe('robots.txt configuration'),
+      jsonLdEntities: z.array(z.object({
+        type: z.enum(['Organization', 'WebSite', 'WebPage', 'BreadcrumbList', 'FAQPage', 'Product', 'SoftwareApplication', 'Review', 'Article', 'LocalBusiness', 'Event', 'Person']),
+        data: z.record(z.unknown()).optional(),
+      })).optional().describe('Schema.org entities to generate'),
+    },
+  }, async (args) => {
+    const artifact = generateArtifact(args.type as SeoArtifactType, args);
+    return textResult(artifact);
+  });
+
+  // 13. Generate SEO bundle
+  server.registerTool('generate_seo_bundle', {
+    title: 'Generate SEO Bundle',
+    description:
+      'Generate multiple SEO artifacts at once (meta tags, sitemap, robots.txt, JSON-LD).',
+    inputSchema: {
+      types: z.array(seoTypeEnum).describe('Artifact types to generate'),
+      siteName: z.string().describe('Site or company name'),
+      siteUrl: z.string().describe('Site URL'),
+      title: z.string().optional().describe('Page title'),
+      description: z.string().optional().describe('Meta description'),
+      locale: z.string().default('en_US').describe('Locale'),
+      ogImage: z.string().optional().describe('URL to Open Graph image'),
+      twitterHandle: z.string().optional().describe('Twitter handle'),
+      pages: z.array(z.object({
+        path: z.string(),
+        lastmod: z.string().optional(),
+        changefreq: z.enum(['always', 'hourly', 'daily', 'weekly', 'monthly', 'yearly', 'never']).optional(),
+        priority: z.number().optional(),
+      })).optional().describe('Sitemap pages'),
+      robotsConfig: z.object({
+        rules: z.array(z.object({
+          userAgent: z.string(),
+          allow: z.array(z.string()).optional(),
+          disallow: z.array(z.string()).optional(),
+        })).optional(),
+        sitemapUrl: z.string().optional(),
+        crawlDelay: z.number().optional(),
+      }).optional(),
+      jsonLdEntities: z.array(z.object({
+        type: z.enum(['Organization', 'WebSite', 'WebPage', 'BreadcrumbList', 'FAQPage', 'Product', 'SoftwareApplication', 'Review', 'Article', 'LocalBusiness', 'Event', 'Person']),
+        data: z.record(z.unknown()).optional(),
+      })).optional(),
+    },
+  }, async (args) => {
+    const bundle = generateSeoBundle(args.types as SeoArtifactType[], args);
     return textResult(bundle);
   });
 }

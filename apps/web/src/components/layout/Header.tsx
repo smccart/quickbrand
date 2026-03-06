@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { label: 'Palette', to: '/palette' },
   { label: 'Placeholders', to: '/placeholders' },
   { label: 'Legal', to: '/legal' },
-  { label: 'SEO', to: '/seo', comingSoon: true },
+  { label: 'SEO', to: '/seo' },
   { label: 'Security', to: '/security', comingSoon: true },
 ];
 
