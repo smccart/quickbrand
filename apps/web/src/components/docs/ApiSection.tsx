@@ -212,6 +212,80 @@ const { svg, htmlSnippet, manifest } = await res.json();
           ]}
         />
       </div>
+      {/* Legal */}
+      <div className="space-y-6">
+        <h3 className="text-lg font-semibold">Legal Documents</h3>
+
+        <EndpointBlock
+          method="POST"
+          path="/legal/generate"
+          summary="Generate a single legal document. Returns Markdown and HTML output."
+          params={[
+            { name: 'type', type: 'string', required: true, description: 'privacy-policy, terms-of-service, cookie-consent, disclaimer, acceptable-use, or dmca' },
+            { name: 'companyName', type: 'string', required: true, description: 'Company or project name' },
+            { name: 'websiteUrl', type: 'string', required: true, description: 'Website URL' },
+            { name: 'contactEmail', type: 'string', required: true, description: 'Contact email for legal inquiries' },
+            { name: 'jurisdiction', type: 'string', description: 'Legal jurisdiction (default: United States)' },
+            { name: 'appType', type: 'string', description: 'website, saas, mobile-app, or marketplace (default: website)' },
+            { name: 'includeGdpr', type: 'boolean', description: 'Add GDPR section to privacy policy (default: false)' },
+            { name: 'includeCcpa', type: 'boolean', description: 'Add CCPA section to privacy policy (default: false)' },
+          ]}
+          curl={`curl -X POST "${BASE}/legal/generate" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "type": "privacy-policy",
+    "companyName": "Acme Corp",
+    "websiteUrl": "https://acme.com",
+    "contactEmail": "legal@acme.com",
+    "includeGdpr": true
+  }'`}
+          fetch={`const res = await fetch("${BASE}/legal/generate", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    type: "privacy-policy",
+    companyName: "Acme Corp",
+    websiteUrl: "https://acme.com",
+    contactEmail: "legal@acme.com",
+    includeGdpr: true,
+  }),
+});
+const { document } = await res.json();
+// document.markdown, document.html, document.metadata`}
+        />
+
+        <EndpointBlock
+          method="POST"
+          path="/legal/bundle"
+          summary="Generate multiple legal documents at once. Returns an array of documents."
+          params={[
+            { name: 'types', type: 'string[]', required: true, description: 'Array of document types to generate' },
+            { name: 'companyName', type: 'string', required: true, description: 'Company or project name' },
+            { name: 'websiteUrl', type: 'string', required: true, description: 'Website URL' },
+            { name: 'contactEmail', type: 'string', required: true, description: 'Contact email for legal inquiries' },
+            { name: 'jurisdiction', type: 'string', description: 'Legal jurisdiction (default: United States)' },
+            { name: 'appType', type: 'string', description: 'website, saas, mobile-app, or marketplace' },
+          ]}
+          curl={`curl -X POST "${BASE}/legal/bundle" \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "types": ["privacy-policy", "terms-of-service", "cookie-consent"],
+    "companyName": "Acme Corp",
+    "websiteUrl": "https://acme.com",
+    "contactEmail": "legal@acme.com"
+  }'`}
+        />
+
+        <EndpointBlock
+          method="GET"
+          path="/legal/types"
+          summary="List all available legal document types with descriptions."
+          curl={`curl "${BASE}/legal/types"`}
+          fetch={`const res = await fetch("${BASE}/legal/types");
+const { types } = await res.json();
+// types["privacy-policy"] = { title, description }`}
+        />
+      </div>
     </div>
   );
 }

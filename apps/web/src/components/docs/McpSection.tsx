@@ -76,6 +76,16 @@ export default function McpSection() {
                   description: 'Search 200k+ icons from the Iconify database',
                   inputs: 'query, limit',
                 },
+                {
+                  name: 'generate_legal_document',
+                  description: 'Generate a single legal document (privacy policy, ToS, etc.)',
+                  inputs: 'type, companyName, websiteUrl, contactEmail',
+                },
+                {
+                  name: 'generate_legal_bundle',
+                  description: 'Generate multiple legal documents at once',
+                  inputs: 'types[], companyName, websiteUrl, contactEmail',
+                },
               ].map((tool) => (
                 <tr key={tool.name} className="border-b last:border-0">
                   <td className="px-4 py-2 font-mono text-xs text-foreground whitespace-nowrap">{tool.name}</td>

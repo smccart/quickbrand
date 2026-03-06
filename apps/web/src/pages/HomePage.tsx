@@ -15,6 +15,7 @@ const SERVICES = [
     title: 'Legal Docs',
     description: 'Privacy policies, terms of service, and cookie consent banners tailored to your stack.',
     to: '/legal',
+    live: true,
   },
   {
     icon: Search,

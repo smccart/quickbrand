@@ -6,6 +6,7 @@ import McpSection from '@/components/docs/McpSection';
 const TOC = [
   { id: 'overview', label: 'Overview' },
   { id: 'brand-service', label: 'Brand Service' },
+  { id: 'legal-service', label: 'Legal Service' },
   { id: 'architecture', label: 'Architecture' },
   { id: 'api', label: 'REST API' },
   { id: 'mcp', label: 'MCP Server' },
@@ -83,7 +84,7 @@ export default function DocsPage() {
             <h3 className="text-lg font-semibold">Services</h3>
             <ul className="text-muted-foreground space-y-1 list-disc list-inside">
               <li><strong>Brand Kit</strong> — logos, favicons, social cards, design tokens (live now)</li>
-              <li><strong>Legal Docs</strong> — privacy policies, terms of service, cookie consent (coming soon)</li>
+              <li><strong>Legal Docs</strong> — privacy policies, terms of service, cookie consent, and more (live now)</li>
               <li><strong>SEO Config</strong> — meta tags, sitemaps, robots.txt, structured data (coming soon)</li>
               <li><strong>Security</strong> — CSP headers, CORS configs, auth scaffolds (coming soon)</li>
             </ul>
@@ -151,8 +152,75 @@ export default function DocsPage() {
         </div>
       </Section>
 
+      {/* Legal Service */}
+      <Section id="legal-service" title="Legal Service" muted>
+        <div className="space-y-6">
+          <p className="text-muted-foreground">
+            The legal service generates production-ready legal documents from project details.
+            Enter your company name, website, and contact email — get Markdown and HTML output
+            ready to paste into your project.
+          </p>
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">How it works</h3>
+            <ol className="text-muted-foreground space-y-2 list-decimal list-inside">
+              <li>Go to the <Link to="/legal" className="text-primary underline underline-offset-4">Legal</Link> page and enter your project details</li>
+              <li>Select which documents you need (privacy policy, terms of service, etc.)</li>
+              <li>Optionally toggle GDPR/CCPA sections and set your jurisdiction</li>
+              <li>Click Generate — documents are created instantly from templates</li>
+              <li>Copy Markdown or download all documents as a ZIP</li>
+            </ol>
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">Document types</h3>
+            <div className="border rounded-lg overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b bg-muted/50">
+                    <th className="text-left px-4 py-2 font-medium">Document</th>
+                    <th className="text-left px-4 py-2 font-medium">Description</th>
+                  </tr>
+                </thead>
+                <tbody className="text-muted-foreground">
+                  <tr className="border-b">
+                    <td className="px-4 py-2 font-medium text-foreground">Privacy Policy</td>
+                    <td className="px-4 py-2">Data collection, usage, sharing, user rights. Optional GDPR & CCPA sections.</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="px-4 py-2 font-medium text-foreground">Terms of Service</td>
+                    <td className="px-4 py-2">Usage rules, liability, IP, termination, and governing law.</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="px-4 py-2 font-medium text-foreground">Cookie Policy</td>
+                    <td className="px-4 py-2">Cookie types, consent mechanism, opt-out instructions.</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="px-4 py-2 font-medium text-foreground">Disclaimer</td>
+                    <td className="px-4 py-2">Liability limitations, accuracy statements, external links.</td>
+                  </tr>
+                  <tr className="border-b">
+                    <td className="px-4 py-2 font-medium text-foreground">Acceptable Use Policy</td>
+                    <td className="px-4 py-2">Prohibited conduct, enforcement actions, abuse reporting.</td>
+                  </tr>
+                  <tr>
+                    <td className="px-4 py-2 font-medium text-foreground">DMCA Policy</td>
+                    <td className="px-4 py-2">Copyright takedown procedures, counter-notices, designated agent.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div className="space-y-2">
+            <h3 className="text-lg font-semibold">Output formats</h3>
+            <ul className="text-muted-foreground space-y-1 list-disc list-inside">
+              <li><strong>Markdown</strong> — raw template output, copy into your repo or CMS</li>
+              <li><strong>HTML</strong> — rendered from Markdown, ready to embed in any page</li>
+            </ul>
+          </div>
+        </div>
+      </Section>
+
       {/* Architecture */}
-      <Section id="architecture" title="Architecture" muted>
+      <Section id="architecture" title="Architecture">
         <div className="space-y-6">
           <p className="text-muted-foreground">
             FetchKit is a TypeScript monorepo built with Turborepo and pnpm workspaces.
@@ -166,6 +234,7 @@ export default function DocsPage() {
 │   └── web/              → React UI (this site)
 ├── packages/
 │   ├── brand/            → @fetchkit/brand (logo, favicon, tokens)
+│   ├── legal/            → @fetchkit/legal (legal document generation)
 │   ├── mcp/              → @fetchkit/mcp (MCP server, stdio)
 │   ├── tsconfig/         → shared TypeScript config
 │   └── eslint-config/    → shared ESLint config

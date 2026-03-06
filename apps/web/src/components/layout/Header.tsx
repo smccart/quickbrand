@@ -7,7 +7,7 @@ const NAV_ITEMS = [
   { label: 'Brand', to: '/create' },
   { label: 'Palette', to: '/palette' },
   { label: 'Placeholders', to: '/placeholders' },
-  { label: 'Legal', to: '/legal', comingSoon: true },
+  { label: 'Legal', to: '/legal' },
   { label: 'SEO', to: '/seo', comingSoon: true },
   { label: 'Security', to: '/security', comingSoon: true },
 ];

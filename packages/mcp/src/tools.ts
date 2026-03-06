@@ -20,6 +20,8 @@ import {
   generatePlaceholder,
 } from '@fetchkit/brand';
 import type { ColorHarmony, LayoutDirection, ColorMode, PlaceholderCategory } from '@fetchkit/brand';
+import { generateDocument, generateBundle, LEGAL_DOC_TYPES } from '@fetchkit/legal';
+import type { LegalDocType } from '@fetchkit/legal';
 
 function textResult(data: unknown): { content: Array<{ type: 'text'; text: string }> } {
   return {
@@ -184,5 +186,52 @@ export function registerTools(server: McpServer): void {
   }, async ({ query, limit }) => {
     const icons = await searchIcons(query, limit);
     return textResult({ icons, count: icons.length });
+  });
+
+  // 8. Generate legal document
+  const legalDocTypes = Object.keys(LEGAL_DOC_TYPES) as LegalDocType[];
+  const legalTypeEnum = z.enum(legalDocTypes as [string, ...string[]]);
+
+  server.registerTool('generate_legal_document', {
+    title: 'Generate Legal Document',
+    description:
+      `Generate a single legal document (privacy policy, terms of service, cookie consent, disclaimer, acceptable use policy, or DMCA policy). Returns Markdown and HTML.`,
+    inputSchema: {
+      type: legalTypeEnum.describe('Document type to generate'),
+      companyName: z.string().describe('Company or project name'),
+      websiteUrl: z.string().describe('Website URL'),
+      contactEmail: z.string().describe('Contact email for legal inquiries'),
+      jurisdiction: z.string().default('United States').describe('Legal jurisdiction'),
+      appType: z.enum(['website', 'saas', 'mobile-app', 'marketplace']).default('website').describe('Type of application'),
+      includeGdpr: z.boolean().default(false).describe('Include GDPR section (privacy policy only)'),
+      includeCcpa: z.boolean().default(false).describe('Include CCPA section (privacy policy only)'),
+    },
+  }, async ({ type, companyName, websiteUrl, contactEmail, jurisdiction, appType, includeGdpr, includeCcpa }) => {
+    const doc = generateDocument(type as LegalDocType, {
+      companyName, websiteUrl, contactEmail, jurisdiction, appType, includeGdpr, includeCcpa,
+    });
+    return textResult(doc);
+  });
+
+  // 9. Generate legal bundle
+  server.registerTool('generate_legal_bundle', {
+    title: 'Generate Legal Bundle',
+    description:
+      'Generate multiple legal documents at once. Returns an array of documents, each with Markdown and HTML.',
+    inputSchema: {
+      types: z.array(legalTypeEnum).describe('Document types to generate'),
+      companyName: z.string().describe('Company or project name'),
+      websiteUrl: z.string().describe('Website URL'),
+      contactEmail: z.string().describe('Contact email for legal inquiries'),
+      jurisdiction: z.string().default('United States').describe('Legal jurisdiction'),
+      appType: z.enum(['website', 'saas', 'mobile-app', 'marketplace']).default('website').describe('Type of application'),
+      includeGdpr: z.boolean().default(false).describe('Include GDPR section (privacy policy only)'),
+      includeCcpa: z.boolean().default(false).describe('Include CCPA section (privacy policy only)'),
+    },
+  }, async ({ types, companyName, websiteUrl, contactEmail, jurisdiction, appType, includeGdpr, includeCcpa }) => {
+    const bundle = generateBundle(types as LegalDocType[], {
+      companyName, websiteUrl, contactEmail, jurisdiction, appType, includeGdpr, includeCcpa,
+    });
+    return textResult(bundle);
   });
 }

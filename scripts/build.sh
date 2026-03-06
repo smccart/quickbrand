@@ -22,12 +22,25 @@ cat > .vercel/output/functions/api/brand.func/.vc-config.json << 'VCEOF'
 }
 VCEOF
 
+# Bundle Legal API function
+mkdir -p .vercel/output/functions/api/legal.func
+npx esbuild api/_legal-wrapper.ts --bundle --platform=node --format=cjs --outfile=.vercel/output/functions/api/legal.func/index.js
+
+cat > .vercel/output/functions/api/legal.func/.vc-config.json << 'VCEOF'
+{
+  "runtime": "nodejs20.x",
+  "handler": "index.js",
+  "launcherType": "Nodejs"
+}
+VCEOF
+
 # Build Output API config with rewrites
 cat > .vercel/output/config.json << 'CFGEOF'
 {
   "version": 3,
   "routes": [
     { "src": "/api/brand/(.*)", "dest": "/api/brand" },
+    { "src": "/api/legal/(.*)", "dest": "/api/legal" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
