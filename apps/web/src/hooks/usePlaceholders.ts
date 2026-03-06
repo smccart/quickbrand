@@ -14,7 +14,7 @@ interface UsePlaceholdersReturn {
   downloadSingle: (image: PlaceholderImage) => void;
 }
 
-export function usePlaceholders(color: string): UsePlaceholdersReturn {
+export function usePlaceholders(color: string, secondaryColor?: string): UsePlaceholdersReturn {
   const [bundle, setBundle] = useState<PlaceholderBundle | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
@@ -24,14 +24,15 @@ export function usePlaceholders(color: string): UsePlaceholdersReturn {
     timerRef.current = setTimeout(() => {
       setIsGenerating(true);
       setTimeout(() => {
-        const result = generatePlaceholderBundle([color], ALL_CATEGORIES);
+        const colors = secondaryColor ? [color, secondaryColor] : [color];
+        const result = generatePlaceholderBundle(colors, ALL_CATEGORIES);
         setBundle(result);
         setIsGenerating(false);
       }, 0);
     }, 150);
 
     return () => clearTimeout(timerRef.current);
-  }, [color]);
+  }, [color, secondaryColor]);
 
   const downloadAll = useCallback(async () => {
     if (!bundle) return;

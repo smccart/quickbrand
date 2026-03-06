@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router-dom';
-import { Bot } from 'lucide-react';
+import { Bot, Moon, Sun } from 'lucide-react';
 import { useSiteColor } from '@/hooks/useSiteColor';
+import { useTheme } from '@/hooks/useTheme';
 
 const NAV_ITEMS = [
   { label: 'Brand', to: '/create' },
@@ -13,7 +14,8 @@ const NAV_ITEMS = [
 
 export function Header() {
   const location = useLocation();
-  const { color, setColor } = useSiteColor();
+  const { color, secondaryColor, setColor, setSecondaryColor } = useSiteColor();
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <header className="border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-50">
@@ -42,19 +44,41 @@ export function Header() {
             </Link>
           ))}
         </nav>
-        <div className="ml-auto flex items-center gap-4">
-          <label className="relative cursor-pointer group" title="Site accent color">
-            <input
-              type="color"
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-              className="sr-only"
-            />
-            <div
-              className="h-6 w-6 rounded-full border border-border ring-offset-background transition-shadow group-hover:ring-2 group-hover:ring-ring group-hover:ring-offset-2"
-              style={{ backgroundColor: color }}
-            />
-          </label>
+        <div className="ml-auto flex items-center gap-3">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Brand Colors</span>
+            <label className="relative cursor-pointer group" title="Primary brand color">
+              <input
+                type="color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                className="sr-only"
+              />
+              <div
+                className="h-4 w-4 rounded-full border border-border ring-offset-background transition-shadow group-hover:ring-2 group-hover:ring-ring group-hover:ring-offset-1"
+                style={{ backgroundColor: color }}
+              />
+            </label>
+            <label className="relative cursor-pointer group" title="Secondary brand color">
+              <input
+                type="color"
+                value={secondaryColor}
+                onChange={(e) => setSecondaryColor(e.target.value)}
+                className="sr-only"
+              />
+              <div
+                className="h-4 w-4 rounded-full border border-border ring-offset-background transition-shadow group-hover:ring-2 group-hover:ring-ring group-hover:ring-offset-1"
+                style={{ backgroundColor: secondaryColor }}
+              />
+            </label>
+          </div>
+          <button
+            onClick={toggleTheme}
+            className="text-muted-foreground hover:text-foreground transition-colors"
+            title={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
+          >
+            {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
+          </button>
           <Link
             to="/docs"
             className={`text-sm font-medium transition-colors ${

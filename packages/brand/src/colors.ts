@@ -41,16 +41,16 @@ function hslToHex(h: number, s: number, l: number): string {
   return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
 }
 
-export function buildAccentPalettes(accentHex: string): PaletteTemplate[] {
+export function buildAccentPalettes(accentHex: string, secondaryHex?: string): PaletteTemplate[] {
   const { h, s, l } = hexToHsl(accentHex);
   const sat = Math.max(s, 0.5);
 
-  return [
+  const palettes: PaletteTemplate[] = [
     {
       name: 'Brand',
       colors: [
         accentHex,
-        hslToHex(h, sat, Math.min(l + 0.15, 0.85)),
+        secondaryHex || hslToHex(h, sat, Math.min(l + 0.15, 0.85)),
         hslToHex(h, sat * 0.8, Math.max(l - 0.15, 0.2)),
         hslToHex(h + 15, sat, l),
         hslToHex(h - 15, sat, l),
@@ -61,7 +61,7 @@ export function buildAccentPalettes(accentHex: string): PaletteTemplate[] {
       name: 'Brand Complement',
       colors: [
         accentHex,
-        hslToHex(h + 180, sat, l),
+        secondaryHex || hslToHex(h + 180, sat, l),
         hslToHex(h, sat, Math.min(l + 0.2, 0.85)),
         hslToHex(h + 180, sat, Math.min(l + 0.2, 0.85)),
         hslToHex(h + 30, sat * 0.7, l),
@@ -72,7 +72,7 @@ export function buildAccentPalettes(accentHex: string): PaletteTemplate[] {
       name: 'Brand Analogous',
       colors: [
         accentHex,
-        hslToHex(h + 30, sat, l),
+        secondaryHex || hslToHex(h + 30, sat, l),
         hslToHex(h - 30, sat, l),
         hslToHex(h + 60, sat * 0.8, Math.min(l + 0.1, 0.8)),
         hslToHex(h - 60, sat * 0.8, Math.min(l + 0.1, 0.8)),
@@ -83,7 +83,7 @@ export function buildAccentPalettes(accentHex: string): PaletteTemplate[] {
       name: 'Brand Triadic',
       colors: [
         accentHex,
-        hslToHex(h + 120, sat, l),
+        secondaryHex || hslToHex(h + 120, sat, l),
         hslToHex(h + 240, sat, l),
         hslToHex(h, sat, Math.min(l + 0.2, 0.85)),
         hslToHex(h + 120, sat, Math.min(l + 0.2, 0.85)),
@@ -91,6 +91,25 @@ export function buildAccentPalettes(accentHex: string): PaletteTemplate[] {
       ],
     },
   ];
+
+  // When secondary is provided, add a dedicated primary+secondary duotone palette
+  if (secondaryHex) {
+    const { h: h2, s: s2, l: l2 } = hexToHsl(secondaryHex);
+    const sat2 = Math.max(s2, 0.5);
+    palettes.push({
+      name: 'Brand Duotone',
+      colors: [
+        accentHex,
+        secondaryHex,
+        hslToHex(h, sat, Math.min(l + 0.2, 0.85)),
+        hslToHex(h2, sat2, Math.min(l2 + 0.2, 0.85)),
+        hslToHex(h, sat * 0.6, Math.max(l - 0.1, 0.2)),
+        hslToHex(h2, sat2 * 0.6, Math.max(l2 - 0.1, 0.2)),
+      ],
+    });
+  }
+
+  return palettes;
 }
 
 export const PALETTE_TEMPLATES: PaletteTemplate[] = [
@@ -127,6 +146,168 @@ export const PALETTE_TEMPLATES: PaletteTemplate[] = [
   { name: 'Steel', colors: ['#4A4E69', '#22223B', '#9A8C98', '#C9ADA7', '#F2E9E4', '#6B705C'] },
 ];
 
+/**
+ * Split a brand name into logical segments based on camelCase, spaces, and punctuation.
+ * "FetchKit" → ["Fetch", "Kit"]
+ * "Fetch Kit" → ["Fetch", "Kit"]
+ * "FetchKit.com" → ["FetchKit", ".com"]
+ * "myApp" → ["my", "App"]
+ */
+export function splitBrandSegments(name: string): string[] {
+  const segments: string[] = [];
+  let current = '';
+
+  for (let i = 0; i < name.length; i++) {
+    const ch = name[i];
+
+    if (ch === ' ') {
+      if (current) segments.push(current);
+      current = '';
+      continue;
+    }
+
+    // Punctuation starts a new segment (stays attached to what follows)
+    if (/[^a-zA-Z0-9]/.test(ch)) {
+      if (current) segments.push(current);
+      current = ch;
+      continue;
+    }
+
+    // CamelCase: uppercase after lowercase starts new segment
+    if (/[A-Z]/.test(ch) && current.length > 0 && /[a-z]/.test(current[current.length - 1])) {
+      segments.push(current);
+      current = ch;
+      continue;
+    }
+
+    current += ch;
+  }
+  if (current) segments.push(current);
+
+  return segments;
+}
+
+/** Get the char index where the last segment starts in the original name */
+function getLastSegmentStart(name: string, segments: string[]): number {
+  if (segments.length < 2) return 0;
+  const lastSeg = segments[segments.length - 1];
+  // Walk backwards from end to find where last segment starts
+  let pos = name.length - 1;
+  let segPos = lastSeg.length - 1;
+  while (pos >= 0 && segPos >= 0) {
+    if (name[pos] === ' ') { pos--; continue; }
+    pos--;
+    segPos--;
+  }
+  return pos + 1;
+}
+
+// Split solid: prefix in neutral color, suffix in solid accent
+export function assignSplitSolid(name: string, template: PaletteTemplate, neutralColor = '#FFFFFF'): ColorPalette {
+  const segments = splitBrandSegments(name);
+  if (segments.length < 2) return assignMonochromeColors(name, template);
+
+  const suffixStart = getLastSegmentStart(name, segments);
+  const accentColor = template.colors[0];
+
+  const letterColors: string[] = [];
+  for (let i = 0; i < name.length; i++) {
+    if (name[i] === ' ') letterColors.push('transparent');
+    else if (i >= suffixStart) letterColors.push(accentColor);
+    else letterColors.push(neutralColor);
+  }
+
+  return {
+    name: `${template.name} Split`,
+    iconColor: accentColor,
+    letterColors,
+    fillMode: 'solid',
+    segments,
+  };
+}
+
+// Split duotone: prefix in one palette color, suffix in another
+export function assignSplitDuotone(name: string, template: PaletteTemplate): ColorPalette {
+  const segments = splitBrandSegments(name);
+  if (segments.length < 2) return assignMonochromeColors(name, template);
+
+  const suffixStart = getLastSegmentStart(name, segments);
+  const prefixColor = template.colors[0];
+  const suffixColor = template.colors[1 % template.colors.length];
+
+  const letterColors: string[] = [];
+  for (let i = 0; i < name.length; i++) {
+    if (name[i] === ' ') letterColors.push('transparent');
+    else if (i >= suffixStart) letterColors.push(suffixColor);
+    else letterColors.push(prefixColor);
+  }
+
+  return {
+    name: `${template.name} Duo`,
+    iconColor: prefixColor,
+    letterColors,
+    fillMode: 'solid',
+    segments,
+  };
+}
+
+// Split gradient: prefix in neutral, suffix gets a gradient
+export function assignSplitGradient(name: string, template: PaletteTemplate, neutralColor = '#FFFFFF'): ColorPalette {
+  const segments = splitBrandSegments(name);
+  if (segments.length < 2) return assignWordGradients(name, template);
+
+  const suffixStart = getLastSegmentStart(name, segments);
+  const lastIdx = segments.length - 1;
+  const slugBase = template.name.toLowerCase().replace(/\s+/g, '-');
+
+  const gradients: GradientDef[] = segments.map((_, si) => {
+    if (si < lastIdx) {
+      return {
+        id: `grad-${slugBase}-split${si}`,
+        stops: [{ color: neutralColor, offset: 0 }, { color: neutralColor, offset: 1 }],
+        angle: 90,
+        type: 'linear' as const,
+      };
+    }
+    const c1 = template.colors[0];
+    const c2 = template.colors[1 % template.colors.length];
+    return {
+      id: `grad-${slugBase}-split${si}`,
+      stops: [{ color: c1, offset: 0 }, { color: c2, offset: 1 }],
+      angle: 90,
+      type: 'linear' as const,
+    };
+  });
+
+  const iconGradient: GradientDef = {
+    id: `grad-${slugBase}-split-icon`,
+    stops: [
+      { color: template.colors[0], offset: 0 },
+      { color: template.colors[1], offset: 1 },
+    ],
+    angle: 135,
+    type: 'linear',
+  };
+
+  // Solid fallback letterColors
+  const letterColors: string[] = [];
+  for (let i = 0; i < name.length; i++) {
+    if (name[i] === ' ') letterColors.push('transparent');
+    else if (i >= suffixStart) letterColors.push(template.colors[0]);
+    else letterColors.push(neutralColor);
+  }
+
+  return {
+    name: `${template.name} Split Grad`,
+    iconColor: template.colors[0],
+    letterColors,
+    fillMode: 'gradient',
+    gradients,
+    iconGradient,
+    segments,
+  };
+}
+
 export function assignLetterColors(companyName: string, template: PaletteTemplate): ColorPalette {
   const letterColors: string[] = [];
 
@@ -161,14 +342,16 @@ export function assignMonochromeColors(companyName: string, template: PaletteTem
   };
 }
 
-// Gradient palette - one gradient per word
+// Gradient palette - one gradient per segment (camelCase/space/punctuation aware)
 export function assignWordGradients(companyName: string, template: PaletteTemplate): ColorPalette {
-  const words = companyName.split(' ');
-  const gradients: GradientDef[] = words.map((_, wordIdx) => {
-    const c1 = template.colors[(wordIdx * 2) % template.colors.length];
-    const c2 = template.colors[(wordIdx * 2 + 1) % template.colors.length];
+  const segments = splitBrandSegments(companyName);
+  const slugBase = template.name.toLowerCase().replace(/\s+/g, '-');
+
+  const gradients: GradientDef[] = segments.map((_, segIdx) => {
+    const c1 = template.colors[(segIdx * 2) % template.colors.length];
+    const c2 = template.colors[(segIdx * 2 + 1) % template.colors.length];
     return {
-      id: `grad-${template.name.toLowerCase().replace(/\s+/g, '-')}-word${wordIdx}`,
+      id: `grad-${slugBase}-seg${segIdx}`,
       stops: [
         { color: c1, offset: 0 },
         { color: c2, offset: 1 },
@@ -179,7 +362,7 @@ export function assignWordGradients(companyName: string, template: PaletteTempla
   });
 
   const iconGradient: GradientDef = {
-    id: `grad-${template.name.toLowerCase().replace(/\s+/g, '-')}-icon`,
+    id: `grad-${slugBase}-icon`,
     stops: [
       { color: template.colors[0], offset: 0 },
       { color: template.colors[1], offset: 1 },
@@ -205,6 +388,7 @@ export function assignWordGradients(companyName: string, template: PaletteTempla
     fillMode: 'gradient',
     gradients,
     iconGradient,
+    segments,
   };
 }
 

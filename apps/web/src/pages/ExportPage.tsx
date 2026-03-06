@@ -21,8 +21,8 @@ export default function ExportPage() {
   const [config, setConfig] = useState<LogoConfig | null>(null);
   const favicon = useFavicon(config);
   const socialCards = useSocialCards(config);
-  const { color } = useSiteColor();
-  const placeholders = usePlaceholders(color);
+  const { color, secondaryColor } = useSiteColor();
+  const placeholders = usePlaceholders(color, secondaryColor);
 
   const paletteExport = useMemo(() => {
     if (!config) return null;

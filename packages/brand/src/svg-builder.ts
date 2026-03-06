@@ -38,9 +38,9 @@ export function buildPreviewSvg(config: LogoConfig, layout: LayoutDirection): st
   const isGradient = colors.fillMode === 'gradient' && colors.gradients?.length;
 
   if (layout === 'horizontal') {
-    return buildHorizontalSvg(companyName, font.family, font.weight, colors.iconColor, colors.letterColors, isGradient ? colors.gradients : undefined, isGradient ? colors.iconGradient : undefined);
+    return buildHorizontalSvg(companyName, font.family, font.weight, colors.iconColor, colors.letterColors, isGradient ? colors.gradients : undefined, isGradient ? colors.iconGradient : undefined, colors.segments);
   }
-  return buildVerticalSvg(companyName, font.family, font.weight, colors.iconColor, colors.letterColors, isGradient ? colors.gradients : undefined, isGradient ? colors.iconGradient : undefined);
+  return buildVerticalSvg(companyName, font.family, font.weight, colors.iconColor, colors.letterColors, isGradient ? colors.gradients : undefined, isGradient ? colors.iconGradient : undefined, colors.segments);
 }
 
 function buildWordTexts(
@@ -49,6 +49,7 @@ function buildWordTexts(
   fontWeight: number,
   letterColors: string[],
   gradients: GradientDef[] | undefined,
+  segments: string[] | undefined,
   anchorX: number,
   y: number,
   textAnchor: 'start' | 'middle',
@@ -64,20 +65,29 @@ function buildWordTexts(
     return `<text x="${anchorX}" y="${y}" ${textAnchor === 'middle' ? 'text-anchor="middle" ' : ''}dominant-baseline="central" font-family="'${fontFamily}', sans-serif" font-weight="${fontWeight}" font-size="${FONT_SIZE}">${letterSpans}</text>`;
   }
 
-  // Gradient mode: one <text> per word
-  const words = name.split(' ');
+  // Gradient mode: one <text> per segment (or per space-separated word as fallback)
+  const parts = segments || name.split(' ');
   const charWidth = FONT_SIZE * 0.6;
   const spaceWidth = charWidth;
   const texts: string[] = [];
   let xOffset = textAnchor === 'middle' ? anchorX - (name.length * charWidth) / 2 : anchorX;
 
-  for (let wi = 0; wi < words.length; wi++) {
-    const word = words[wi];
-    const grad = gradients[wi % gradients.length];
+  // Walk through the original name to correctly position segments
+  let nameIdx = 0;
+  for (let pi = 0; pi < parts.length; pi++) {
+    // Skip spaces in original name
+    while (nameIdx < name.length && name[nameIdx] === ' ') {
+      xOffset += spaceWidth;
+      nameIdx++;
+    }
+
+    const part = parts[pi];
+    const grad = gradients[pi % gradients.length];
     texts.push(
-      `<text x="${xOffset}" y="${y}" dominant-baseline="central" font-family="'${fontFamily}', sans-serif" font-weight="${fontWeight}" font-size="${FONT_SIZE}" fill="url(#${grad.id})">${escapeXml(word)}</text>`,
+      `<text x="${xOffset}" y="${y}" dominant-baseline="central" font-family="'${fontFamily}', sans-serif" font-weight="${fontWeight}" font-size="${FONT_SIZE}" fill="url(#${grad.id})">${escapeXml(part)}</text>`,
     );
-    xOffset += word.length * charWidth + spaceWidth;
+    xOffset += part.length * charWidth;
+    nameIdx += part.length;
   }
 
   return texts.join('\n  ');
@@ -91,6 +101,7 @@ function buildHorizontalSvg(
   letterColors: string[],
   gradients?: GradientDef[],
   iconGradient?: GradientDef,
+  segments?: string[],
 ): string {
   const charWidth = FONT_SIZE * 0.6;
   const textWidth = name.length * charWidth;
@@ -103,7 +114,7 @@ function buildHorizontalSvg(
   const defs = (gradients || iconGradient) ? buildGradientDefs(gradients ?? [], iconGradient) : '';
   const iconFill = iconGradient ? `url(#${iconGradient.id})` : iconColor;
 
-  const textContent = buildWordTexts(name, fontFamily, fontWeight, letterColors, gradients, textX, textY, 'start');
+  const textContent = buildWordTexts(name, fontFamily, fontWeight, letterColors, gradients, segments, textX, textY, 'start');
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalWidth} ${totalHeight}" width="${totalWidth}" height="${totalHeight}">
   ${defs}
@@ -121,6 +132,7 @@ function buildVerticalSvg(
   letterColors: string[],
   gradients?: GradientDef[],
   iconGradient?: GradientDef,
+  segments?: string[],
 ): string {
   const charWidth = FONT_SIZE * 0.6;
   const textWidth = name.length * charWidth;
@@ -134,7 +146,7 @@ function buildVerticalSvg(
   const defs = (gradients || iconGradient) ? buildGradientDefs(gradients ?? [], iconGradient) : '';
   const iconFill = iconGradient ? `url(#${iconGradient.id})` : iconColor;
 
-  const textContent = buildWordTexts(name, fontFamily, fontWeight, letterColors, gradients, textX, textY, 'middle');
+  const textContent = buildWordTexts(name, fontFamily, fontWeight, letterColors, gradients, segments, textX, textY, 'middle');
 
   return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalWidth} ${totalHeight}" width="${totalWidth}" height="${totalHeight}">
   ${defs}

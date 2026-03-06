@@ -16,7 +16,7 @@ const DEFAULT_NAME = 'FetchKit';
 export default function RefinePage() {
   const navigate = useNavigate();
   const [companyName, setCompanyName] = useState(DEFAULT_NAME);
-  const { color: accentColor } = useSiteColor();
+  const { color: accentColor, secondaryColor } = useSiteColor();
   const debouncedRef = useRef<ReturnType<typeof setTimeout>>(undefined);
   const initialRef = useRef(true);
 
@@ -32,7 +32,7 @@ export default function RefinePage() {
     updateFont,
     updateIcon,
     updateColors,
-  } = useInfiniteLogos(companyName, accentColor);
+  } = useInfiniteLogos(companyName, accentColor, secondaryColor);
 
   // Generate on mount immediately, then debounce subsequent changes
   useEffect(() => {
@@ -51,7 +51,7 @@ export default function RefinePage() {
 
     return () => clearTimeout(debouncedRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [companyName, accentColor]);
+  }, [companyName, accentColor, secondaryColor]);
 
   const handleExport = () => {
     if (selected) {

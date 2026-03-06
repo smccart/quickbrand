@@ -1,7 +1,7 @@
 import type { LogoVariation, FontConfig, IconConfig, ColorPalette, WordStyle } from './types';
 import { CURATED_FONTS } from './fonts';
 import { getIconsForCompany } from './icons';
-import { PALETTE_TEMPLATES, assignLetterColors, assignMonochromeColors, assignWordGradients, buildAccentPalettes } from './colors';
+import { PALETTE_TEMPLATES, assignLetterColors, assignMonochromeColors, assignWordGradients, assignSplitSolid, assignSplitDuotone, assignSplitGradient, buildAccentPalettes, splitBrandSegments } from './colors';
 
 function shuffleArray<T>(arr: T[]): T[] {
   const shuffled = [...arr];
@@ -24,23 +24,31 @@ const WORD_STYLE_PRESETS: WordStyle[][] = [
   [{ fontSize: 0.85, fontWeight: 800 }, { fontSize: 1.15, fontWeight: 400 }],
 ];
 
-// Build full palette list from templates (solid multicolor + mono + gradient)
-function buildAllPalettes(companyName: string, accentColor?: string): ColorPalette[] {
+// Build full palette list from templates (solid, mono, gradient, split modes)
+function buildAllPalettes(companyName: string, accentColor?: string, secondaryColor?: string): ColorPalette[] {
   const palettes: ColorPalette[] = [];
+  const hasSplittableSegments = splitBrandSegments(companyName).length >= 2;
+
+  function addPalettesForTemplate(template: { name: string; colors: string[] }) {
+    palettes.push(assignLetterColors(companyName, template));
+    palettes.push(assignMonochromeColors(companyName, template));
+    palettes.push(assignWordGradients(companyName, template));
+    if (hasSplittableSegments) {
+      palettes.push(assignSplitSolid(companyName, template));
+      palettes.push(assignSplitDuotone(companyName, template));
+      palettes.push(assignSplitGradient(companyName, template));
+    }
+  }
 
   // Accent-derived palettes first so they appear in early batches
   if (accentColor) {
-    for (const template of buildAccentPalettes(accentColor)) {
-      palettes.push(assignLetterColors(companyName, template));
-      palettes.push(assignMonochromeColors(companyName, template));
-      palettes.push(assignWordGradients(companyName, template));
+    for (const template of buildAccentPalettes(accentColor, secondaryColor)) {
+      addPalettesForTemplate(template);
     }
   }
 
   for (const template of PALETTE_TEMPLATES) {
-    palettes.push(assignLetterColors(companyName, template));
-    palettes.push(assignMonochromeColors(companyName, template));
-    palettes.push(assignWordGradients(companyName, template));
+    addPalettesForTemplate(template);
   }
   return palettes;
 }
@@ -63,9 +71,10 @@ export function generateLogosBatch(
   batchSize: number,
   icons: IconConfig[],
   accentColor?: string,
+  secondaryColor?: string,
 ): LogoVariation[] {
   const fonts = CURATED_FONTS;
-  const palettes = buildAllPalettes(companyName, accentColor);
+  const palettes = buildAllPalettes(companyName, accentColor, secondaryColor);
   const hasMultipleWords = companyName.split(' ').filter(Boolean).length >= 2;
   const styleCount = hasMultipleWords ? WORD_STYLE_PRESETS.length : 1;
 

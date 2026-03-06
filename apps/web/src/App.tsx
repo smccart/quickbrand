@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { SiteColorProvider } from '@/hooks/useSiteColor';
+import { ThemeProvider } from '@/hooks/useTheme';
 
 const HomePage = lazy(() => import('@/pages/HomePage'));
 const RefinePage = lazy(() => import('@/pages/RefinePage'));
@@ -16,6 +17,7 @@ const PlaceholdersPage = lazy(() => import('@/pages/PlaceholdersPage'));
 
 export default function App() {
   return (
+    <ThemeProvider>
     <SiteColorProvider>
     <BrowserRouter>
       <div className="min-h-screen flex flex-col">
@@ -44,5 +46,6 @@ export default function App() {
       </div>
     </BrowserRouter>
     </SiteColorProvider>
+    </ThemeProvider>
   );
 }

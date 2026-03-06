@@ -45,18 +45,40 @@ function textToLetterPaths(
   font: opentype.Font,
   fontSize: number,
   letterColors: string[],
+  segments?: string[],
 ): LetterPath[] {
   const paths: LetterPath[] = [];
   let x = 0;
   const scale = fontSize / font.unitsPerEm;
-  let wordIndex = 0;
+
+  // Build per-character segment map if segments provided
+  let segmentMap: number[] | undefined;
+  if (segments) {
+    segmentMap = [];
+    let si = 0;
+    let posInSeg = 0;
+    for (let i = 0; i < text.length; i++) {
+      if (text[i] === ' ') {
+        segmentMap.push(-1);
+      } else {
+        while (si < segments.length && posInSeg >= segments[si].length) {
+          si++;
+          posInSeg = 0;
+        }
+        segmentMap.push(si);
+        posInSeg++;
+      }
+    }
+  }
+
+  let wordIndex = 0; // fallback for no segments
 
   for (let i = 0; i < text.length; i++) {
     const char = text[i];
     if (char === ' ') {
       const spaceGlyph = font.charToGlyph(' ');
       x += (spaceGlyph.advanceWidth ?? font.unitsPerEm * 0.25) * scale;
-      wordIndex++;
+      if (!segmentMap) wordIndex++;
       continue;
     }
 
@@ -73,7 +95,7 @@ function textToLetterPaths(
         color: letterColors[i] ?? letterColors[0],
         x,
         width: advanceWidth,
-        wordIndex,
+        wordIndex: segmentMap ? (segmentMap[i] ?? 0) : wordIndex,
       });
       x += advanceWidth;
     }
@@ -152,6 +174,7 @@ export async function buildExportSvg(
     font,
     FONT_SIZE,
     colors.letterColors,
+    colors.segments,
   );
 
   // Calculate text bounds

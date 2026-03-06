@@ -30,8 +30,9 @@ export interface ColorPalette {
   iconColor: string;
   letterColors: string[];
   fillMode?: ColorFillMode;
-  gradients?: GradientDef[]; // one per word
+  gradients?: GradientDef[]; // one per segment
   iconGradient?: GradientDef;
+  segments?: string[]; // text segments for segment-aware rendering (camelCase, spaces, punctuation)
 }
 
 // Word-level sizing/weight differentiation

@@ -5,7 +5,7 @@ import { loadAllFonts } from '@/lib/browser';
 
 const BATCH_SIZE = 12;
 
-export function useInfiniteLogos(companyName: string, accentColor?: string) {
+export function useInfiniteLogos(companyName: string, accentColor?: string, secondaryColor?: string) {
   const [variations, setVariations] = useState<LogoVariation[]>([]);
   const [isInitialLoading, setIsInitialLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -16,6 +16,8 @@ export function useInfiniteLogos(companyName: string, accentColor?: string) {
   const batchIndexRef = useRef(0);
   const accentRef = useRef(accentColor);
   accentRef.current = accentColor;
+  const secondaryRef = useRef(secondaryColor);
+  secondaryRef.current = secondaryColor;
 
   const generateInitial = useCallback(async () => {
     if (!companyName.trim()) return;
@@ -35,7 +37,7 @@ export function useInfiniteLogos(companyName: string, accentColor?: string) {
         return;
       }
 
-      const batch = generateLogosBatch(companyName.trim(), 0, BATCH_SIZE, icons, accentRef.current);
+      const batch = generateLogosBatch(companyName.trim(), 0, BATCH_SIZE, icons, accentRef.current, secondaryRef.current);
       setVariations(batch);
       batchIndexRef.current = 1;
       setHasMore(batch.length === BATCH_SIZE);
@@ -56,6 +58,7 @@ export function useInfiniteLogos(companyName: string, accentColor?: string) {
         BATCH_SIZE,
         iconsRef.current,
         accentRef.current,
+        secondaryRef.current,
       );
 
       if (batch.length === 0) {
