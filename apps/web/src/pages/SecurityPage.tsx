@@ -11,7 +11,7 @@ export default function SecurityPage() {
             Coming Soon
           </div>
           <div className="flex justify-center">
-            <Shield className="h-12 w-12 text-muted-foreground" />
+            <Shield className="h-12 w-12" style={{ color: 'var(--secondary-brand)' }} />
           </div>
           <h1 className="text-4xl font-bold tracking-tight">Security Config</h1>
           <p className="text-lg text-muted-foreground leading-relaxed">

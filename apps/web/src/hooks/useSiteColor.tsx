@@ -29,11 +29,15 @@ export function SiteColorProvider({ children }: { children: ReactNode }) {
     localStorage.setItem(STORAGE_KEY, color);
     document.documentElement.style.setProperty('--primary', color);
     document.documentElement.style.setProperty('--ring', color);
+    document.documentElement.style.setProperty('--chart-1', color);
+    document.documentElement.style.setProperty('--sidebar-primary', color);
+    document.documentElement.style.setProperty('--sidebar-ring', color);
   }, [color]);
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY_SECONDARY, secondaryColor);
     document.documentElement.style.setProperty('--secondary-brand', secondaryColor);
+    document.documentElement.style.setProperty('--chart-2', secondaryColor);
   }, [secondaryColor]);
 
   return (

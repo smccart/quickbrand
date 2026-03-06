@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Palette, Scale, Search, Shield, Zap, Code, UserX, Github, Layers, Package } from 'lucide-react';
+import { useSiteColor } from '@/hooks/useSiteColor';
 
 const SERVICES = [
   {
@@ -41,10 +42,15 @@ const FEATURES = [
 ];
 
 export default function HomePage() {
+  const { color, secondaryColor } = useSiteColor();
+
   return (
     <div className="flex-1">
       {/* Hero */}
-      <section className="py-24 px-6 bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,oklch(0.70_0.19_38/0.15),transparent)]">
+      <section
+        className="py-24 px-6"
+        style={{ background: `radial-gradient(ellipse 80% 50% at 50% -10%, ${color}26, transparent)` }}
+      >
         <div className="container mx-auto text-center max-w-3xl space-y-6">
           <h1 className="text-5xl font-bold tracking-tight">
             Scaffolding as a Service
@@ -77,14 +83,23 @@ export default function HomePage() {
                 className="border rounded-xl p-6 bg-card/50 hover:border-primary/30 transition-colors group block"
               >
                 <div className="flex items-start gap-4">
-                  <div className="rounded-lg bg-primary/10 p-2.5 text-primary">
+                  <div
+                    className="rounded-lg p-2.5"
+                    style={{
+                      backgroundColor: `${s.live ? color : secondaryColor}1a`,
+                      color: s.live ? color : secondaryColor,
+                    }}
+                  >
                     <s.icon className="h-5 w-5" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2 mb-1">
                       <h3 className="font-semibold text-lg">{s.title}</h3>
                       {s.live ? (
-                        <span className="text-[10px] uppercase tracking-wider font-medium text-primary bg-primary/10 px-2 py-0.5 rounded-full">
+                        <span
+                          className="text-[10px] uppercase tracking-wider font-medium px-2 py-0.5 rounded-full"
+                          style={{ color, backgroundColor: `${color}1a` }}
+                        >
                           Live
                         </span>
                       ) : (
@@ -107,9 +122,14 @@ export default function HomePage() {
         <div className="container mx-auto max-w-4xl">
           <h2 className="text-3xl font-bold text-center mb-12">Built for Agents & Developers</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {FEATURES.map((f) => (
-              <div key={f.title} className="border rounded-xl p-5 bg-card/50 hover:border-primary/30 transition-colors">
-                <f.icon className="h-5 w-5 text-primary mb-3" />
+            {FEATURES.map((f, i) => (
+              <div
+                key={f.title}
+                className="border rounded-xl p-5 bg-card/50 transition-colors hover:shadow-sm"
+                onMouseEnter={(e) => e.currentTarget.style.borderColor = i % 2 === 0 ? `${color}4d` : `${secondaryColor}4d`}
+                onMouseLeave={(e) => e.currentTarget.style.borderColor = ''}
+              >
+                <f.icon className="h-5 w-5 mb-3" style={{ color: i % 2 === 0 ? color : secondaryColor }} />
                 <h3 className="font-semibold mb-1">{f.title}</h3>
                 <p className="text-sm text-muted-foreground">{f.desc}</p>
               </div>
@@ -119,7 +139,10 @@ export default function HomePage() {
       </section>
 
       {/* CTA */}
-      <section className="py-16 px-6 bg-[radial-gradient(ellipse_60%_80%_at_50%_50%,oklch(0.70_0.19_38/0.1),transparent)]">
+      <section
+        className="py-16 px-6"
+        style={{ background: `radial-gradient(ellipse 60% 80% at 50% 50%, ${color}1a, ${secondaryColor}0d, transparent)` }}
+      >
         <div className="container mx-auto text-center space-y-4">
           <h2 className="text-3xl font-bold">Ready to scaffold your project?</h2>
           <p className="text-muted-foreground">
