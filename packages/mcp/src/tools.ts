@@ -45,7 +45,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_brand_logos', {
     title: 'Generate Brand Logos',
     description:
-      'Generate logo variations for a company. Returns up to 30 logo variations with different icon, font, and color combinations. Each variation includes a LogoConfig that can be passed to export_brand_svg. When FREEPIK_API_KEY is set, includes AI-generated icons alongside Iconify results.',
+      `Generate logo variations for a company. Returns up to 30 logo variations with different icon, font, and color combinations. Each variation includes a LogoConfig that can be passed to export_brand_svg. When FREEPIK_API_KEY is set, includes AI-generated icons alongside Iconify results.
+
+Example: { "companyName": "Acme Corp", "count": 5 }
+Returns: { "variations": [{ "companyName": "Acme Corp", "font": { "family": "Space Grotesk", ... }, "icon": { "id": "mdi:rocket", ... }, "colors": { "iconColor": "#6366f1", "letterColors": [...] } }, ...], "count": 5 }`,
     inputSchema: {
       companyName: z.string().describe('The company or project name'),
       count: z.number().max(30).default(10).describe('Number of variations (max 30)'),
@@ -59,7 +62,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('export_brand_svg', {
     title: 'Export Brand SVG',
     description:
-      'Build a production-ready SVG logo with text converted to paths (no font dependencies). Takes a LogoConfig from generate_brand_logos output.',
+      `Build a production-ready SVG logo with text converted to paths (no font dependencies). Takes a LogoConfig from generate_brand_logos output.
+
+Example: { "config": <LogoConfig from generate_brand_logos>, "layout": "horizontal", "mode": "light" }
+Returns: { "svg": "<svg>...</svg>", "layout": "horizontal", "mode": "light" }`,
     inputSchema: {
       config: z.object({
         companyName: z.string(),
@@ -91,7 +97,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_design_tokens', {
     title: 'Generate Design Tokens',
     description:
-      'Generate CSS variables, Tailwind config, and JSON design tokens from a brand color palette and font.',
+      `Generate CSS variables, Tailwind config, and JSON design tokens from a brand color palette and font.
+
+Example: { "colors": { "name": "brand", "iconColor": "#6366f1", "letterColors": ["#6366f1"] }, "font": { "family": "Inter", "weight": 700, "category": "sans-serif" } }
+Returns: { "css": { "variables": ":root { --brand-primary: #6366f1; ... }", "fontCss": "..." }, "tailwind": { "colors": {...}, "font": {...} }, "json": { "colorTokens": {...} }, "html": { "fontLinkTag": "<link ...>" } }`,
     inputSchema: {
       colors: z.object({
         name: z.string(),
@@ -123,7 +132,11 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_semantic_palette', {
     title: 'Generate Semantic Palette',
     description:
-      'Generate a full semantic color palette with shade scales, WCAG contrast ratios, and light/dark mode variants. Provide either a seed hex color or a brand name for deterministic generation.',
+      `Generate a full semantic color palette with shade scales (50-950), WCAG contrast ratios, and light/dark mode variants. Provide either a seed hex color or a brand name for deterministic generation.
+
+Example: { "seedColor": "#6366f1", "harmony": "analogous" }
+— or —  { "brandName": "Acme Corp" }
+Returns: { "cssVariables": ":root { ... }", "tailwindConfig": "module.exports = { ... }", "tokensJson": "{...}", "colors": [{ "name": "primary", "hex": "#6366f1", "shades": { "50": "#eef2ff", ... "950": "#1e1b4b" }, "contrastOnWhite": { "ratio": 4.5, "level": "AA" } }, ...] }`,
     inputSchema: {
       seedColor: z.string().optional().describe('Hex color to build palette from (e.g. #6366f1)'),
       brandName: z.string().optional().describe('Generate deterministic palette from brand name (alternative to seedColor)'),
@@ -146,7 +159,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_favicon', {
     title: 'Generate Favicon',
     description:
-      'Generate a favicon SVG from an Iconify icon. Returns SVG markup, HTML snippet for embedding, and a web manifest template.',
+      `Generate a favicon SVG from an Iconify icon. Returns SVG markup, HTML snippet for embedding, and a web manifest template.
+
+Example: { "iconId": "mdi:rocket-launch", "iconColor": "#6366f1", "companyName": "Acme" }
+Returns: { "svg": "<svg>...</svg>", "htmlSnippet": "<link rel=\\"icon\\" ...>", "manifest": { "name": "Acme", "icons": [...] } }`,
     inputSchema: {
       iconId: z.string().describe('Iconify icon ID (e.g. mdi:rocket-launch)'),
       iconColor: z.string().describe('Hex color for the icon (e.g. #6366f1)'),
@@ -167,7 +183,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_placeholder', {
     title: 'Generate Placeholder Image',
     description:
-      'Generate SVG placeholder images for UI mockups. Categories: hero, avatar, product, chart, team, background, pattern, icon-grid, screenshot-dashboard, screenshot-table, screenshot-chat, screenshot-editor, screenshot-settings, screenshot-landing.',
+      `Generate SVG placeholder images for UI mockups. Categories: hero, avatar, product, chart, team, background, pattern, icon-grid, screenshot-dashboard, screenshot-table, screenshot-chat, screenshot-editor, screenshot-settings, screenshot-landing.
+
+Example: { "category": "hero", "colors": ["#6366f1", "#8b5cf6"], "width": 1200, "height": 600 }
+Returns: { "svg": "<svg>...</svg>", "category": "hero", "width": 1200, "height": 600 }`,
     inputSchema: {
       category: z.enum(['hero', 'avatar', 'product', 'chart', 'team', 'background', 'pattern', 'icon-grid', 'screenshot-dashboard', 'screenshot-table', 'screenshot-chat', 'screenshot-editor', 'screenshot-settings', 'screenshot-landing']).describe('Placeholder category'),
       colors: z.array(z.string()).default([]).describe('Hex colors to use'),
@@ -189,7 +208,11 @@ export function registerTools(server: McpServer): void {
   // 7. Search icons
   server.registerTool('search_icons', {
     title: 'Search Icons',
-    description: 'Search the Iconify icon database. Returns icon IDs usable with generate_favicon or export_brand_svg.',
+    description:
+      `Search the Iconify icon database. Returns icon IDs usable with generate_favicon, generate_app_icon, or export_brand_svg.
+
+Example: { "query": "rocket", "limit": 5 }
+Returns: { "icons": ["mdi:rocket", "mdi:rocket-launch", "ph:rocket", ...], "count": 5 }`,
     inputSchema: {
       query: z.string().describe('Search term'),
       limit: z.number().max(50).default(20).describe('Max results'),
@@ -203,7 +226,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_ai_icon', {
     title: 'Generate AI Icon',
     description:
-      'Generate a custom AI icon using Freepik. Requires FREEPIK_API_KEY environment variable. Returns an IconConfig with embedded SVG.',
+      `Generate a custom AI icon using Freepik. Requires FREEPIK_API_KEY environment variable. Returns an IconConfig with embedded SVG.
+
+Example: { "prompt": "rocket launching into space", "style": "solid" }
+Returns: { "icon": { "id": "ai:rocket-launch", "name": "rocket launching into space", "svg": "<svg>...</svg>" } }`,
     inputSchema: {
       prompt: z.string().describe('Description of the icon to generate (e.g. "rocket launching into space")'),
       style: z.enum(['solid', 'outline', 'color', 'flat', 'sticker']).default('solid').describe('Visual style'),
@@ -223,7 +249,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_letterhead', {
     title: 'Generate Letterhead',
     description:
-      'Generate an SVG letterhead template with header HTML, footer HTML, and print CSS for professional documents.',
+      `Generate an SVG letterhead template with header HTML, footer HTML, and print CSS for professional documents.
+
+Example: { "companyName": "Acme Corp", "tagline": "Building the future", "email": "hello@acme.com", "website": "https://acme.com", "primaryColor": "#6366f1" }
+Returns: { "svg": "<svg>...</svg>", "headerHtml": "<div>...</div>", "footerHtml": "<div>...</div>", "printCss": "@media print { ... }" }`,
     inputSchema: {
       companyName: z.string().describe('Company name'),
       tagline: z.string().optional().describe('Company tagline'),
@@ -253,7 +282,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_app_icon', {
     title: 'Generate App Icon',
     description:
-      'Generate app icons in all standard sizes (16-1024px) with optional gradient backgrounds. Returns SVGs, manifest entry, and HTML snippet.',
+      `Generate app icons in all standard sizes (16-1024px) with optional gradient backgrounds. Returns SVGs, manifest entry, and HTML snippet.
+
+Example: { "iconId": "mdi:rocket-launch", "iconColor": "#ffffff", "backgroundColor": "#6366f1", "borderRadius": 22, "padding": 20 }
+Returns: { "svg": "<svg>...</svg>", "htmlSnippet": "<link rel=\\"apple-touch-icon\\" ...>", "manifestEntry": "{...}", "sizeCount": 8 }`,
     inputSchema: {
       iconId: z.string().describe('Iconify icon ID (e.g. mdi:rocket-launch)'),
       iconColor: z.string().default('#ffffff').describe('Icon color (hex)'),
@@ -283,7 +315,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_brand_guidelines', {
     title: 'Generate Brand Guidelines',
     description:
-      'Generate a comprehensive brand guidelines document in Markdown with color table, typography snippet, and usage rules.',
+      `Generate a comprehensive brand guidelines document in Markdown with color table, typography snippet, and usage rules.
+
+Example: { "companyName": "Acme Corp", "tagline": "Building the future", "primaryColor": "#6366f1", "fontFamily": "Space Grotesk" }
+Returns: { "markdown": "# Acme Corp Brand Guidelines\\n...", "typographySnippet": "font-family: 'Space Grotesk', sans-serif; ..." }`,
     inputSchema: {
       companyName: z.string().describe('Company name'),
       tagline: z.string().optional().describe('Company tagline'),
@@ -313,7 +348,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_email_signature', {
     title: 'Generate Email Signature',
     description:
-      'Generate a professional HTML email signature with plain text fallback. Table-based layout for email client compatibility.',
+      `Generate a professional HTML email signature with plain text fallback. Table-based layout for email client compatibility.
+
+Example: { "name": "Jane Doe", "title": "CTO", "companyName": "Acme Corp", "email": "jane@acme.com", "website": "https://acme.com", "primaryColor": "#6366f1" }
+Returns: { "html": "<table>...</table>", "plainText": "Jane Doe | CTO | Acme Corp | ..." }`,
     inputSchema: {
       name: z.string().describe('Person name'),
       title: z.string().optional().describe('Job title'),
@@ -352,7 +390,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_legal_document', {
     title: 'Generate Legal Document',
     description:
-      `Generate a single legal document (privacy policy, terms of service, cookie consent, disclaimer, acceptable use policy, or DMCA policy). Returns Markdown and HTML.`,
+      `Generate a single legal document. Types: privacy-policy, terms-of-service, cookie-consent, disclaimer, acceptable-use, dmca. Returns Markdown and HTML.
+
+Example: { "type": "privacy-policy", "companyName": "Acme Corp", "websiteUrl": "https://acme.com", "contactEmail": "legal@acme.com", "appType": "saas", "includeGdpr": true }
+Returns: { "type": "privacy-policy", "title": "Privacy Policy", "markdown": "# Privacy Policy\\n...", "html": "<h1>Privacy Policy</h1>...", "metadata": { "wordCount": 1200, "jurisdiction": "United States" } }`,
     inputSchema: {
       type: legalTypeEnum.describe('Document type to generate'),
       companyName: z.string().describe('Company or project name'),
@@ -374,7 +415,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_legal_bundle', {
     title: 'Generate Legal Bundle',
     description:
-      'Generate multiple legal documents at once. Returns an array of documents, each with Markdown and HTML.',
+      `Generate multiple legal documents at once. Returns an array of documents, each with Markdown and HTML. Use this to scaffold all legal docs for a project in one call.
+
+Example: { "types": ["privacy-policy", "terms-of-service", "cookie-consent"], "companyName": "Acme Corp", "websiteUrl": "https://acme.com", "contactEmail": "legal@acme.com" }
+Returns: { "documents": [{ "type": "privacy-policy", "markdown": "...", "html": "..." }, ...], "count": 3 }`,
     inputSchema: {
       types: z.array(legalTypeEnum).describe('Document types to generate'),
       companyName: z.string().describe('Company or project name'),
@@ -399,7 +443,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_seo_artifact', {
     title: 'Generate SEO Artifact',
     description:
-      'Generate a single SEO artifact: meta tags (HTML), XML sitemap, robots.txt, or Schema.org JSON-LD structured data.',
+      `Generate a single SEO artifact: meta tags (HTML), XML sitemap, robots.txt, or Schema.org JSON-LD structured data. JSON-LD supports 12 entity types: Organization, WebSite, WebPage, BreadcrumbList, FAQPage, Product, SoftwareApplication, Review, Article, LocalBusiness, Event, Person.
+
+Example: { "type": "meta-tags", "siteName": "Acme", "siteUrl": "https://acme.com", "description": "Building the future" }
+Returns: { "type": "meta-tags", "title": "Meta Tags", "content": "<meta property=\\"og:title\\" content=\\"Acme\\" />\\n...", "filename": "meta-tags.html" }`,
     inputSchema: {
       type: seoTypeEnum.describe('Artifact type to generate'),
       siteName: z.string().describe('Site or company name'),
@@ -438,7 +485,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_seo_bundle', {
     title: 'Generate SEO Bundle',
     description:
-      'Generate multiple SEO artifacts at once (meta tags, sitemap, robots.txt, JSON-LD).',
+      `Generate multiple SEO artifacts at once. Use this to scaffold all SEO files for a project in one call.
+
+Example: { "types": ["meta-tags", "sitemap", "robots-txt", "json-ld"], "siteName": "Acme", "siteUrl": "https://acme.com", "pages": [{ "path": "/", "priority": 1.0 }, { "path": "/about", "priority": 0.8 }] }
+Returns: { "artifacts": [{ "type": "meta-tags", "content": "...", "filename": "meta-tags.html" }, ...], "count": 4 }`,
     inputSchema: {
       types: z.array(seoTypeEnum).describe('Artifact types to generate'),
       siteName: z.string().describe('Site or company name'),
@@ -482,7 +532,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_security_artifact', {
     title: 'Generate Security Artifact',
     description:
-      'Generate a single security artifact: CSP header, CORS config, security headers, auth scaffold, env template, or rate limiter.',
+      `Generate a single security artifact: csp-header, cors-config, security-headers, auth-scaffold, env-template, or rate-limit. Supports frameworks: express, nextjs, fastify, hono, generic. Auth strategies: jwt, session, oauth2, api-key.
+
+Example: { "type": "csp-header", "siteName": "Acme", "siteUrl": "https://acme.com", "framework": "express", "appType": "saas" }
+Returns: { "type": "csp-header", "title": "Content Security Policy", "content": "helmet({ contentSecurityPolicy: { ... } })", "filename": "csp.js" }`,
     inputSchema: {
       type: securityTypeEnum.describe('Artifact type to generate'),
       siteName: z.string().describe('Site or company name'),
@@ -508,7 +561,10 @@ export function registerTools(server: McpServer): void {
   server.registerTool('generate_security_bundle', {
     title: 'Generate Security Bundle',
     description:
-      'Generate multiple security artifacts at once (CSP, CORS, headers, auth, env, rate limit).',
+      `Generate multiple security artifacts at once. Use this to scaffold all security configs for a project in one call.
+
+Example: { "types": ["csp-header", "cors-config", "security-headers", "auth-scaffold"], "siteName": "Acme", "siteUrl": "https://acme.com", "framework": "nextjs", "appType": "saas", "authStrategy": "jwt" }
+Returns: { "artifacts": [{ "type": "csp-header", "content": "...", "filename": "csp.ts" }, ...], "count": 4 }`,
     inputSchema: {
       types: z.array(securityTypeEnum).describe('Artifact types to generate'),
       siteName: z.string().describe('Site or company name'),

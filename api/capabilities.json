@@ -1,0 +1,74 @@
+{
+  "name": "FetchKit",
+  "version": "0.1.0",
+  "description": "Scaffolding-as-a-service for developers and AI agents",
+  "documentation": "https://fetchkit.dev/docs",
+  "openapi": "https://fetchkit.dev/api/openapi.json",
+  "mcp": {
+    "install": "npx @fetchkit/mcp",
+    "tools": 17
+  },
+  "services": {
+    "brand": {
+      "description": "Logo, favicon, palette, tokens, letterhead, app icon, email signature, brand guidelines",
+      "baseUrl": "/api/brand",
+      "endpoints": {
+        "generate": { "method": "GET", "path": "/generate", "params": ["name", "count?"], "description": "Generate logo variations" },
+        "regenerate": { "method": "POST", "path": "/regenerate", "description": "Regenerate with overrides" },
+        "export-svg": { "method": "POST", "path": "/export-svg", "description": "Production SVG with text-to-paths" },
+        "favicon": { "method": "GET", "path": "/favicon", "params": ["iconId", "iconColor?", "name?"], "description": "Favicon SVG + manifest" },
+        "design-tokens": { "method": "POST", "path": "/design-tokens", "description": "CSS variables, Tailwind config, JSON tokens" },
+        "palette-generate": { "method": "POST", "path": "/palette/generate", "description": "Semantic palette from seed color" },
+        "palette-from-name": { "method": "GET", "path": "/palette/from-name", "params": ["name"], "description": "Deterministic palette from brand name" },
+        "placeholder": { "method": "POST", "path": "/placeholder", "description": "SVG placeholder images (14 categories)" },
+        "letterhead": { "method": "POST", "path": "/letterhead", "description": "Letterhead SVG + HTML + print CSS" },
+        "app-icon": { "method": "POST", "path": "/app-icon", "description": "App icons in all standard sizes" },
+        "guidelines": { "method": "POST", "path": "/guidelines", "description": "Brand guidelines Markdown document" },
+        "email-signature": { "method": "POST", "path": "/email-signature", "description": "HTML email signature + plain text" },
+        "icons-search": { "method": "GET", "path": "/icons/search", "params": ["query", "limit?"], "description": "Search Iconify icon database" },
+        "icons-get": { "method": "GET", "path": "/icons/get", "params": ["id", "color?"], "description": "Fetch icon by ID" },
+        "icons-generate": { "method": "POST", "path": "/icons/generate", "description": "AI icon generation (requires FREEPIK_API_KEY)" }
+      }
+    },
+    "legal": {
+      "description": "Privacy policy, terms of service, cookie consent, disclaimer, acceptable use, DMCA",
+      "baseUrl": "/api/legal",
+      "artifactTypes": ["privacy-policy", "terms-of-service", "cookie-consent", "disclaimer", "acceptable-use", "dmca"],
+      "endpoints": {
+        "generate": { "method": "POST", "path": "/generate", "description": "Generate single legal document" },
+        "bundle": { "method": "POST", "path": "/bundle", "description": "Generate multiple legal documents" },
+        "types": { "method": "GET", "path": "/types", "description": "List available document types" }
+      },
+      "requiredFields": ["type", "companyName", "websiteUrl", "contactEmail"],
+      "optionalFields": ["jurisdiction", "appType", "includeGdpr", "includeCcpa"]
+    },
+    "seo": {
+      "description": "Meta tags, XML sitemap, robots.txt, Schema.org JSON-LD",
+      "baseUrl": "/api/seo",
+      "artifactTypes": ["meta-tags", "sitemap", "robots-txt", "json-ld"],
+      "jsonLdEntityTypes": ["Organization", "WebSite", "WebPage", "BreadcrumbList", "FAQPage", "Product", "SoftwareApplication", "Review", "Article", "LocalBusiness", "Event", "Person"],
+      "endpoints": {
+        "generate": { "method": "POST", "path": "/generate", "description": "Generate single SEO artifact" },
+        "bundle": { "method": "POST", "path": "/bundle", "description": "Generate multiple SEO artifacts" },
+        "types": { "method": "GET", "path": "/types", "description": "List available artifact types" }
+      },
+      "requiredFields": ["type", "siteName", "siteUrl"],
+      "optionalFields": ["title", "description", "locale", "ogImage", "twitterHandle", "pages", "robotsConfig", "jsonLdEntities"]
+    },
+    "security": {
+      "description": "CSP headers, CORS config, security headers, auth scaffold, env template, rate limiter",
+      "baseUrl": "/api/security",
+      "artifactTypes": ["csp-header", "cors-config", "security-headers", "auth-scaffold", "env-template", "rate-limit"],
+      "frameworks": ["express", "nextjs", "fastify", "hono", "generic"],
+      "authStrategies": ["jwt", "session", "oauth2", "api-key"],
+      "appTypes": ["website", "saas", "api", "mobile-backend"],
+      "endpoints": {
+        "generate": { "method": "POST", "path": "/generate", "description": "Generate single security artifact" },
+        "bundle": { "method": "POST", "path": "/bundle", "description": "Generate multiple security artifacts" },
+        "types": { "method": "GET", "path": "/types", "description": "List available types, frameworks, auth strategies" }
+      },
+      "requiredFields": ["type", "siteName", "siteUrl"],
+      "optionalFields": ["framework", "appType", "authStrategy", "corsOrigins"]
+    }
+  }
+}

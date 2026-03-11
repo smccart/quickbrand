@@ -16,8 +16,10 @@ function json(data: unknown, status = 200): Response {
   });
 }
 
-function error(message: string, status = 400): Response {
-  return json({ error: message }, status);
+function error(message: string, status = 400, fix?: string): Response {
+  const body: Record<string, unknown> = { error: message };
+  if (fix) body.fix = fix;
+  return json(body, status);
 }
 
 async function parseBody<T>(req: Request): Promise<T | null> {
@@ -34,13 +36,13 @@ const VALID_DOC_TYPES = Object.keys(legal.LEGAL_DOC_TYPES);
 
 async function handleGenerate(req: Request): Promise<Response> {
   const body = await parseBody<{ type: LegalDocType } & LegalInput>(req);
-  if (!body?.type) return error('Missing required field: type');
+  if (!body?.type) return error('Missing required field: type', 400, `POST JSON with { "type": "privacy-policy", "companyName": "Acme", "websiteUrl": "https://acme.com", "contactEmail": "legal@acme.com" }. Valid types: ${VALID_DOC_TYPES.join(', ')}`);
   if (!VALID_DOC_TYPES.includes(body.type)) {
-    return error(`Invalid type. Must be one of: ${VALID_DOC_TYPES.join(', ')}`);
+    return error(`Invalid type "${body.type}". Must be one of: ${VALID_DOC_TYPES.join(', ')}`, 400, `Change "type" to one of: ${VALID_DOC_TYPES.join(', ')}`);
   }
-  if (!body.companyName) return error('Missing required field: companyName');
-  if (!body.websiteUrl) return error('Missing required field: websiteUrl');
-  if (!body.contactEmail) return error('Missing required field: contactEmail');
+  if (!body.companyName) return error('Missing required field: companyName', 400, 'Add "companyName": "Your Company" to the request body');
+  if (!body.websiteUrl) return error('Missing required field: websiteUrl', 400, 'Add "websiteUrl": "https://yoursite.com" to the request body');
+  if (!body.contactEmail) return error('Missing required field: contactEmail', 400, 'Add "contactEmail": "legal@yoursite.com" to the request body');
 
   try {
     const doc = legal.generateDocument(body.type, body);
@@ -53,16 +55,16 @@ async function handleGenerate(req: Request): Promise<Response> {
 async function handleBundle(req: Request): Promise<Response> {
   const body = await parseBody<{ types: LegalDocType[] } & LegalInput>(req);
   if (!body?.types || !Array.isArray(body.types) || body.types.length === 0) {
-    return error('Missing required field: types (array of document types)');
+    return error('Missing required field: types (array of document types)', 400, `POST JSON with { "types": ["privacy-policy", "terms-of-service"], "companyName": "Acme", "websiteUrl": "https://acme.com", "contactEmail": "legal@acme.com" }. Valid types: ${VALID_DOC_TYPES.join(', ')}`);
   }
   for (const t of body.types) {
     if (!VALID_DOC_TYPES.includes(t)) {
-      return error(`Invalid type "${t}". Must be one of: ${VALID_DOC_TYPES.join(', ')}`);
+      return error(`Invalid type "${t}". Must be one of: ${VALID_DOC_TYPES.join(', ')}`, 400, `Remove or replace "${t}" in the types array. Valid types: ${VALID_DOC_TYPES.join(', ')}`);
     }
   }
-  if (!body.companyName) return error('Missing required field: companyName');
-  if (!body.websiteUrl) return error('Missing required field: websiteUrl');
-  if (!body.contactEmail) return error('Missing required field: contactEmail');
+  if (!body.companyName) return error('Missing required field: companyName', 400, 'Add "companyName": "Your Company" to the request body');
+  if (!body.websiteUrl) return error('Missing required field: websiteUrl', 400, 'Add "websiteUrl": "https://yoursite.com" to the request body');
+  if (!body.contactEmail) return error('Missing required field: contactEmail', 400, 'Add "contactEmail": "legal@yoursite.com" to the request body');
 
   try {
     const bundle = legal.generateBundle(body.types, body);

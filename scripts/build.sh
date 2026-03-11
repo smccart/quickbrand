@@ -8,6 +8,7 @@ pnpm turbo build --filter=@fetchkit/web
 mkdir -p .vercel/output/static/api
 cp -r apps/web/dist/* .vercel/output/static/
 cp api/openapi.json .vercel/output/static/api/openapi.json
+cp api/capabilities.json .vercel/output/static/api/capabilities.json
 
 # Bundle API function with esbuild (self-contained, no external deps to trace)
 mkdir -p .vercel/output/functions/api/brand.func

@@ -16,8 +16,10 @@ function json(data: unknown, status = 200): Response {
   });
 }
 
-function error(message: string, status = 400): Response {
-  return json({ error: message }, status);
+function error(message: string, status = 400, fix?: string): Response {
+  const body: Record<string, unknown> = { error: message };
+  if (fix) body.fix = fix;
+  return json(body, status);
 }
 
 async function parseBody<T>(req: Request): Promise<T | null> {
@@ -34,12 +36,12 @@ const VALID_ARTIFACT_TYPES = Object.keys(seo.SEO_ARTIFACT_TYPES);
 
 async function handleGenerate(req: Request): Promise<Response> {
   const body = await parseBody<{ type: SeoArtifactType } & SeoInput>(req);
-  if (!body?.type) return error('Missing required field: type');
+  if (!body?.type) return error('Missing required field: type', 400, `POST JSON with { "type": "meta-tags", "siteName": "Acme", "siteUrl": "https://acme.com" }. Valid types: ${VALID_ARTIFACT_TYPES.join(', ')}`);
   if (!VALID_ARTIFACT_TYPES.includes(body.type)) {
-    return error(`Invalid type. Must be one of: ${VALID_ARTIFACT_TYPES.join(', ')}`);
+    return error(`Invalid type "${body.type}". Must be one of: ${VALID_ARTIFACT_TYPES.join(', ')}`, 400, `Change "type" to one of: ${VALID_ARTIFACT_TYPES.join(', ')}`);
   }
-  if (!body.siteName) return error('Missing required field: siteName');
-  if (!body.siteUrl) return error('Missing required field: siteUrl');
+  if (!body.siteName) return error('Missing required field: siteName', 400, 'Add "siteName": "Your Site" to the request body');
+  if (!body.siteUrl) return error('Missing required field: siteUrl', 400, 'Add "siteUrl": "https://yoursite.com" to the request body');
 
   try {
     const artifact = seo.generateArtifact(body.type, body);
@@ -52,15 +54,15 @@ async function handleGenerate(req: Request): Promise<Response> {
 async function handleBundle(req: Request): Promise<Response> {
   const body = await parseBody<{ types: SeoArtifactType[] } & SeoInput>(req);
   if (!body?.types || !Array.isArray(body.types) || body.types.length === 0) {
-    return error('Missing required field: types (array of artifact types)');
+    return error('Missing required field: types (array of artifact types)', 400, `POST JSON with { "types": ["meta-tags", "sitemap", "robots-txt"], "siteName": "Acme", "siteUrl": "https://acme.com" }. Valid types: ${VALID_ARTIFACT_TYPES.join(', ')}`);
   }
   for (const t of body.types) {
     if (!VALID_ARTIFACT_TYPES.includes(t)) {
-      return error(`Invalid type "${t}". Must be one of: ${VALID_ARTIFACT_TYPES.join(', ')}`);
+      return error(`Invalid type "${t}". Must be one of: ${VALID_ARTIFACT_TYPES.join(', ')}`, 400, `Remove or replace "${t}" in the types array`);
     }
   }
-  if (!body.siteName) return error('Missing required field: siteName');
-  if (!body.siteUrl) return error('Missing required field: siteUrl');
+  if (!body.siteName) return error('Missing required field: siteName', 400, 'Add "siteName": "Your Site" to the request body');
+  if (!body.siteUrl) return error('Missing required field: siteUrl', 400, 'Add "siteUrl": "https://yoursite.com" to the request body');
 
   try {
     const bundle = seo.generateBundle(body.types, body);
