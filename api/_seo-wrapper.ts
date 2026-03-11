@@ -1,6 +1,7 @@
 // Wrapper to adapt Web API handler to Vercel's Node.js (req, res) format
 import type { IncomingMessage, ServerResponse } from 'http';
 import webHandler from './seo';
+import { rateLimit, rateLimitHeaders } from './_rate-limit';
 
 function readBody(req: IncomingMessage): Promise<string> {
   return new Promise((resolve) => {
@@ -12,6 +13,16 @@ function readBody(req: IncomingMessage): Promise<string> {
 
 export default async function handler(req: IncomingMessage, res: ServerResponse) {
   try {
+    const ip = (req.headers['x-forwarded-for'] as string)?.split(',')[0]?.trim() || 'unknown';
+    const rl = rateLimit(ip);
+    for (const [k, v] of Object.entries(rateLimitHeaders(rl))) res.setHeader(k, v);
+    if (!rl.allowed) {
+      res.statusCode = 429;
+      res.setHeader('Content-Type', 'application/json');
+      res.end(JSON.stringify({ error: 'Too many requests. Please try again later.' }));
+      return;
+    }
+
     const protocol = req.headers['x-forwarded-proto'] || 'https';
     const host = req.headers['x-forwarded-host'] || req.headers.host || 'localhost';
     const url = `${protocol}://${host}${req.url}`;
