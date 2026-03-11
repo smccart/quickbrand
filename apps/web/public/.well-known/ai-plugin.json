@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "FetchKit",
+  "name_for_model": "fetchkit",
+  "description_for_human": "Generate production-ready brand kits, legal docs, SEO configs, and security hardening for any project. Free and open source.",
+  "description_for_model": "FetchKit is a scaffolding-as-a-service API. Use it to generate brand identity assets (logos, favicons, color palettes, design tokens), legal documents (privacy policies, terms of service, cookie consent), SEO configuration files (meta tags, sitemaps, robots.txt, JSON-LD), and security configs (CSP headers, CORS, auth scaffolds, rate limiting). All endpoints are free, require no authentication, and return JSON. Ideal for bootstrapping new projects.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://fetchkit.dev/api/openapi.json"
+  },
+  "logo_url": "https://fetchkit.dev/favicon.svg",
+  "contact_email": "hello@fetchkit.dev",
+  "legal_info_url": "https://fetchkit.dev/legal"
+}

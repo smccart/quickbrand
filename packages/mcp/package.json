@@ -1,11 +1,11 @@
 {
   "name": "@fetchkit/mcp",
   "version": "0.1.0",
-  "description": "MCP server for FetchKit — 17 tools for brand, legal, SEO, and security scaffolding.",
+  "description": "Model Context Protocol (MCP) server for FetchKit — 17 tools for AI agents to generate brand kits, legal docs, SEO configs, and security hardening. Works with Claude, Cursor, and any MCP-compatible client.",
   "license": "MIT",
   "repository": { "type": "git", "url": "https://github.com/smccart/fetchkit", "directory": "packages/mcp" },
   "homepage": "https://fetchkit.dev",
-  "keywords": ["mcp", "model-context-protocol", "ai-agent", "scaffolding"],
+  "keywords": ["mcp", "model-context-protocol", "ai-agent", "llm", "scaffolding", "claude", "cursor", "automation", "tool-use"],
   "files": ["dist"],
   "type": "module",
   "bin": {

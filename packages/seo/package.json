@@ -1,11 +1,11 @@
 {
   "name": "@fetchkit/seo",
   "version": "0.1.0",
-  "description": "SEO artifact generator — meta tags, XML sitemaps, robots.txt, and Schema.org JSON-LD.",
+  "description": "SEO artifact generator for developers and AI agents — meta tags, XML sitemaps, robots.txt, and Schema.org JSON-LD. Callable via REST API, MCP server, or direct import.",
   "license": "MIT",
   "repository": { "type": "git", "url": "https://github.com/smccart/fetchkit", "directory": "packages/seo" },
   "homepage": "https://fetchkit.dev",
-  "keywords": ["seo", "meta-tags", "sitemap", "robots-txt", "json-ld", "schema-org", "scaffolding"],
+  "keywords": ["seo", "meta-tags", "sitemap", "robots-txt", "json-ld", "schema-org", "scaffolding", "ai-agent", "llm", "mcp", "automation"],
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

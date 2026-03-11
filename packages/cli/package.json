@@ -32,6 +32,6 @@
   },
   "homepage": "https://fetchkit.dev",
   "license": "MIT",
-  "keywords": ["scaffolding", "cli", "brand", "legal", "seo", "security", "developer-tools"],
-  "description": "CLI for FetchKit — scaffold brand kits, legal docs, SEO configs, and security hardening from the terminal."
+  "keywords": ["scaffolding", "cli", "brand", "legal", "seo", "security", "developer-tools", "ai-agent", "llm", "automation"],
+  "description": "CLI for FetchKit — scaffold brand kits, legal docs, SEO configs, and security hardening from the terminal. Ideal for CI/CD pipelines and AI agent workflows."
 }

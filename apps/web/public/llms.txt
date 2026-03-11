@@ -1,0 +1,89 @@
+# FetchKit
+
+> Scaffolding as a Service for developers and AI agents.
+
+FetchKit provides instant, production-ready project scaffolding — brand kits, legal documents, SEO configs, and security hardening. Free, open source, no sign-up required.
+
+## Services
+
+### Brand Kit (`@fetchkit/brand`)
+Generate complete brand identities: logos (30+ variations), favicons (SVG/ICO/PNG), color palettes (24 templates with WCAG contrast), design tokens (CSS/Tailwind/JSON), social cards, letterheads, app icons, email signatures, and brand guidelines.
+
+### Legal Docs (`@fetchkit/legal`)
+Generate legal documents: privacy policies, terms of service, cookie consent banners, disclaimers, acceptable use policies, and DMCA notices. Supports GDPR/CCPA sections. Output in Markdown and HTML.
+
+### SEO Config (`@fetchkit/seo`)
+Generate SEO artifacts: HTML meta tags, XML sitemaps, robots.txt, and Schema.org JSON-LD structured data. Configurable for any site.
+
+### Security (`@fetchkit/security`)
+Generate security configs: CSP headers, CORS policies, auth scaffolds (JWT/session), rate limiting, input validation, and security headers. Supports Express and Next.js frameworks.
+
+## API Access
+
+Base URL: https://fetchkit.dev/api
+
+### Brand API
+- `GET /api/brand/generate?name={name}` — Generate logo variations
+- `POST /api/brand/regenerate` — Regenerate with locked overrides
+- `POST /api/brand/export-svg` — Export production SVG
+- `GET /api/brand/favicon?iconId={id}` — Generate favicon bundle
+- `POST /api/brand/design-tokens` — Generate CSS/Tailwind/JSON tokens
+- `GET /api/brand/icons/search?query={q}` — Search Iconify icons
+- `POST /api/brand/palette/generate` — Palette from seed color
+- `GET /api/brand/palette/from-name?name={name}` — Palette from brand name
+- `POST /api/brand/placeholder` — SVG placeholder images
+
+### Legal API
+- `POST /api/legal/generate` — Generate a single legal document
+- `POST /api/legal/bundle` — Generate multiple legal documents
+- `GET /api/legal/types` — List available document types
+
+### SEO API
+- `POST /api/seo/generate` — Generate a single SEO artifact
+- `POST /api/seo/bundle` — Generate multiple SEO artifacts
+- `GET /api/seo/types` — List available artifact types
+
+### Security API
+- `POST /api/security/generate` — Generate a single security config
+- `POST /api/security/bundle` — Generate multiple security configs
+- `GET /api/security/types` — List available artifact types and frameworks
+
+## MCP Server
+
+Install: `npx @fetchkit/mcp`
+
+17 tools available for brand, legal, SEO, and security scaffolding. Uses stdio transport. Configure in your MCP client:
+
+```json
+{
+  "mcpServers": {
+    "fetchkit": {
+      "command": "npx",
+      "args": ["@fetchkit/mcp"]
+    }
+  }
+}
+```
+
+## CLI
+
+Install: `npx @fetchkit/cli init`
+
+Generates all scaffolding files (brand, legal, SEO, security) into a `fetchkit-output/` directory.
+
+## npm Packages
+
+- `@fetchkit/brand` — Brand identity generation
+- `@fetchkit/legal` — Legal document generation
+- `@fetchkit/seo` — SEO artifact generation
+- `@fetchkit/security` — Security config generation
+- `@fetchkit/mcp` — MCP server (17 tools)
+- `@fetchkit/cli` — CLI scaffolding tool
+
+## Links
+
+- Website: https://fetchkit.dev
+- Docs: https://fetchkit.dev/docs
+- API Spec: https://fetchkit.dev/api/openapi.json
+- GitHub: https://github.com/smccart/fetchkit
+- License: MIT

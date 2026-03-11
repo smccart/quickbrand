@@ -1,17 +1,24 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "FetchKit Brand API",
-    "version": "0.1.0",
-    "description": "Free brand identity generation API for developers and AI agents. Generate logos, color palettes, design tokens, favicons, and placeholder images.",
-    "license": { "name": "MIT", "url": "https://github.com/fetchkit/fetchkit/blob/main/LICENSE" }
+    "title": "FetchKit API",
+    "version": "0.2.0",
+    "description": "Free scaffolding API for developers and AI agents. Generate brand identities, legal documents, SEO configs, and security hardening. No authentication required.",
+    "license": { "name": "MIT", "url": "https://github.com/smccart/fetchkit/blob/main/LICENSE" }
   },
   "servers": [
     { "url": "https://fetchkit.dev/api", "description": "Production" }
   ],
+  "tags": [
+    { "name": "brand", "description": "Brand identity generation — logos, favicons, palettes, design tokens, placeholders" },
+    { "name": "legal", "description": "Legal document generation — privacy policies, terms of service, cookie consent, and more" },
+    { "name": "seo", "description": "SEO artifact generation — meta tags, sitemaps, robots.txt, Schema.org JSON-LD" },
+    { "name": "security", "description": "Security config generation — CSP, CORS, auth scaffolds, rate limiting, validation" }
+  ],
   "paths": {
     "/brand/generate": {
       "get": {
+        "tags": ["brand"],
         "operationId": "generateLogos",
         "summary": "Generate logo variations for a company name",
         "parameters": [
@@ -28,6 +35,7 @@
     },
     "/brand/regenerate": {
       "post": {
+        "tags": ["brand"],
         "operationId": "regenerateLogos",
         "summary": "Regenerate logos with specific overrides locked in",
         "requestBody": {
@@ -44,6 +52,7 @@
     },
     "/brand/export-svg": {
       "post": {
+        "tags": ["brand"],
         "operationId": "exportSvg",
         "summary": "Build production-ready SVG with text converted to paths",
         "requestBody": {
@@ -60,6 +69,7 @@
     },
     "/brand/favicon": {
       "get": {
+        "tags": ["brand"],
         "operationId": "generateFavicon",
         "summary": "Generate favicon SVG, HTML snippet, and web manifest",
         "description": "Returns SVG favicon only. PNG/ICO generation requires browser Canvas API and is not available server-side.",
@@ -78,6 +88,7 @@
     },
     "/brand/design-tokens": {
       "post": {
+        "tags": ["brand"],
         "operationId": "generateDesignTokens",
         "summary": "Generate CSS variables, Tailwind config, and JSON design tokens",
         "requestBody": {
@@ -94,6 +105,7 @@
     },
     "/brand/icons/search": {
       "get": {
+        "tags": ["brand"],
         "operationId": "searchIcons",
         "summary": "Search the Iconify icon database",
         "parameters": [
@@ -110,6 +122,7 @@
     },
     "/brand/icons/{id}": {
       "get": {
+        "tags": ["brand"],
         "operationId": "getIcon",
         "summary": "Fetch a single icon SVG by Iconify ID",
         "parameters": [
@@ -126,6 +139,7 @@
     },
     "/brand/palette/generate": {
       "post": {
+        "tags": ["brand"],
         "operationId": "generatePalette",
         "summary": "Generate a semantic color palette from a seed color",
         "requestBody": {
@@ -142,6 +156,7 @@
     },
     "/brand/palette/from-name": {
       "get": {
+        "tags": ["brand"],
         "operationId": "paletteFromName",
         "summary": "Generate a deterministic palette from a brand name",
         "parameters": [
@@ -157,6 +172,7 @@
     },
     "/brand/placeholder": {
       "post": {
+        "tags": ["brand"],
         "operationId": "generatePlaceholder",
         "summary": "Generate SVG placeholder images for UI mockups",
         "requestBody": {
@@ -173,6 +189,7 @@
     },
     "/brand/meta/og-tags": {
       "get": {
+        "tags": ["brand"],
         "operationId": "getOgTags",
         "summary": "Get OG image meta tags HTML snippet",
         "responses": {
@@ -185,6 +202,7 @@
     },
     "/brand/meta/manifest": {
       "get": {
+        "tags": ["brand"],
         "operationId": "getManifest",
         "summary": "Generate a web app manifest",
         "parameters": [
@@ -197,10 +215,256 @@
           }
         }
       }
+    },
+    "/legal/generate": {
+      "post": {
+        "tags": ["legal"],
+        "operationId": "generateLegalDocument",
+        "summary": "Generate a single legal document",
+        "description": "Generate a legal document of the specified type with your company details. Returns both Markdown and HTML formats.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LegalGenerateRequest" },
+              "example": {
+                "type": "privacy-policy",
+                "companyName": "Acme Inc",
+                "websiteUrl": "https://acme.com",
+                "contactEmail": "privacy@acme.com",
+                "jurisdiction": "US-CA",
+                "appType": "saas",
+                "includeGdpr": true,
+                "includeCcpa": true
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generated legal document",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LegalDocumentResponse" } } }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+          }
+        }
+      }
+    },
+    "/legal/bundle": {
+      "post": {
+        "tags": ["legal"],
+        "operationId": "generateLegalBundle",
+        "summary": "Generate multiple legal documents at once",
+        "description": "Generate a bundle of legal documents. Pass an array of document types to generate all at once with consistent company details.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/LegalBundleRequest" },
+              "example": {
+                "types": ["privacy-policy", "terms-of-service", "cookie-consent"],
+                "companyName": "Acme Inc",
+                "websiteUrl": "https://acme.com",
+                "contactEmail": "legal@acme.com"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bundle of legal documents",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LegalBundleResponse" } } }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+          }
+        }
+      }
+    },
+    "/legal/types": {
+      "get": {
+        "tags": ["legal"],
+        "operationId": "getLegalDocTypes",
+        "summary": "List available legal document types",
+        "description": "Returns all supported legal document types with descriptions.",
+        "responses": {
+          "200": {
+            "description": "Available document types",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/LegalTypesResponse" } } }
+          }
+        }
+      }
+    },
+    "/seo/generate": {
+      "post": {
+        "tags": ["seo"],
+        "operationId": "generateSeoArtifact",
+        "summary": "Generate a single SEO artifact",
+        "description": "Generate an SEO configuration artifact (meta tags, sitemap, robots.txt, or JSON-LD structured data).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SeoGenerateRequest" },
+              "example": {
+                "type": "meta-tags",
+                "siteName": "Acme Inc",
+                "siteUrl": "https://acme.com",
+                "description": "The best widgets in the world",
+                "language": "en"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generated SEO artifact",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SeoArtifactResponse" } } }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+          }
+        }
+      }
+    },
+    "/seo/bundle": {
+      "post": {
+        "tags": ["seo"],
+        "operationId": "generateSeoBundle",
+        "summary": "Generate multiple SEO artifacts at once",
+        "description": "Generate a bundle of SEO artifacts. Pass an array of artifact types to generate all at once.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SeoBundleRequest" },
+              "example": {
+                "types": ["meta-tags", "sitemap", "robots-txt", "json-ld"],
+                "siteName": "Acme Inc",
+                "siteUrl": "https://acme.com",
+                "description": "The best widgets in the world"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bundle of SEO artifacts",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SeoBundleResponse" } } }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+          }
+        }
+      }
+    },
+    "/seo/types": {
+      "get": {
+        "tags": ["seo"],
+        "operationId": "getSeoArtifactTypes",
+        "summary": "List available SEO artifact types",
+        "description": "Returns all supported SEO artifact types with descriptions.",
+        "responses": {
+          "200": {
+            "description": "Available artifact types",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SeoTypesResponse" } } }
+          }
+        }
+      }
+    },
+    "/security/generate": {
+      "post": {
+        "tags": ["security"],
+        "operationId": "generateSecurityArtifact",
+        "summary": "Generate a single security config",
+        "description": "Generate a security configuration artifact (CSP, CORS, auth, rate limiting, validation, or security headers).",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SecurityGenerateRequest" },
+              "example": {
+                "type": "csp",
+                "siteName": "Acme Inc",
+                "siteUrl": "https://acme.com",
+                "framework": "express"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Generated security artifact",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SecurityArtifactResponse" } } }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+          }
+        }
+      }
+    },
+    "/security/bundle": {
+      "post": {
+        "tags": ["security"],
+        "operationId": "generateSecurityBundle",
+        "summary": "Generate multiple security configs at once",
+        "description": "Generate a bundle of security configurations. Pass an array of artifact types to generate all at once.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/SecurityBundleRequest" },
+              "example": {
+                "types": ["csp", "cors", "auth", "rate-limit", "validation", "security-headers"],
+                "siteName": "Acme Inc",
+                "siteUrl": "https://acme.com",
+                "framework": "express",
+                "authStrategy": "jwt"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Bundle of security artifacts",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SecurityBundleResponse" } } }
+          },
+          "400": {
+            "description": "Validation error",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/ErrorResponse" } } }
+          }
+        }
+      }
+    },
+    "/security/types": {
+      "get": {
+        "tags": ["security"],
+        "operationId": "getSecurityArtifactTypes",
+        "summary": "List available security artifact types, frameworks, and auth strategies",
+        "description": "Returns all supported security artifact types, application frameworks, and authentication strategies.",
+        "responses": {
+          "200": {
+            "description": "Available artifact types, frameworks, and auth strategies",
+            "content": { "application/json": { "schema": { "$ref": "#/components/schemas/SecurityTypesResponse" } } }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "error": { "type": "string" }
+        }
+      },
       "FontConfig": {
         "type": "object",
         "required": ["family", "weight", "category"],
@@ -390,6 +654,239 @@
           "width": { "type": "integer" },
           "height": { "type": "integer" },
           "metadata": { "type": "object" }
+        }
+      },
+      "LegalInput": {
+        "type": "object",
+        "required": ["companyName", "websiteUrl", "contactEmail"],
+        "properties": {
+          "companyName": { "type": "string", "description": "Your company or project name" },
+          "websiteUrl": { "type": "string", "description": "Your website URL" },
+          "contactEmail": { "type": "string", "description": "Contact email address" },
+          "jurisdiction": { "type": "string", "description": "Legal jurisdiction (e.g. US-CA, EU, UK)", "default": "US" },
+          "appType": { "type": "string", "enum": ["website", "saas", "mobile-app", "marketplace"], "default": "website" },
+          "includeGdpr": { "type": "boolean", "description": "Include GDPR compliance sections", "default": false },
+          "includeCcpa": { "type": "boolean", "description": "Include CCPA compliance sections", "default": false }
+        }
+      },
+      "LegalGenerateRequest": {
+        "allOf": [
+          { "$ref": "#/components/schemas/LegalInput" },
+          {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["privacy-policy", "terms-of-service", "cookie-consent", "disclaimer", "acceptable-use", "dmca"],
+                "description": "Type of legal document to generate"
+              }
+            }
+          }
+        ]
+      },
+      "LegalBundleRequest": {
+        "allOf": [
+          { "$ref": "#/components/schemas/LegalInput" },
+          {
+            "type": "object",
+            "required": ["types"],
+            "properties": {
+              "types": {
+                "type": "array",
+                "items": { "type": "string", "enum": ["privacy-policy", "terms-of-service", "cookie-consent", "disclaimer", "acceptable-use", "dmca"] },
+                "description": "Array of document types to generate"
+              }
+            }
+          }
+        ]
+      },
+      "LegalDocument": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "title": { "type": "string" },
+          "markdown": { "type": "string", "description": "Document content in Markdown format" },
+          "html": { "type": "string", "description": "Document content in HTML format" },
+          "generatedAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "LegalDocumentResponse": {
+        "type": "object",
+        "properties": {
+          "document": { "$ref": "#/components/schemas/LegalDocument" }
+        }
+      },
+      "LegalBundleResponse": {
+        "type": "object",
+        "properties": {
+          "bundle": {
+            "type": "object",
+            "properties": {
+              "documents": { "type": "array", "items": { "$ref": "#/components/schemas/LegalDocument" } },
+              "generatedAt": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      },
+      "LegalTypesResponse": {
+        "type": "object",
+        "properties": {
+          "types": { "type": "object", "description": "Map of type IDs to descriptions" }
+        }
+      },
+      "SeoInput": {
+        "type": "object",
+        "required": ["siteName", "siteUrl"],
+        "properties": {
+          "siteName": { "type": "string", "description": "Site or app name" },
+          "siteUrl": { "type": "string", "description": "Full site URL (e.g. https://example.com)" },
+          "description": { "type": "string", "description": "Site description for meta tags" },
+          "language": { "type": "string", "description": "Language code (e.g. en)", "default": "en" },
+          "pages": { "type": "array", "items": { "type": "string" }, "description": "List of page paths for sitemap" }
+        }
+      },
+      "SeoGenerateRequest": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SeoInput" },
+          {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["meta-tags", "sitemap", "robots-txt", "json-ld"],
+                "description": "Type of SEO artifact to generate"
+              }
+            }
+          }
+        ]
+      },
+      "SeoBundleRequest": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SeoInput" },
+          {
+            "type": "object",
+            "required": ["types"],
+            "properties": {
+              "types": {
+                "type": "array",
+                "items": { "type": "string", "enum": ["meta-tags", "sitemap", "robots-txt", "json-ld"] },
+                "description": "Array of artifact types to generate"
+              }
+            }
+          }
+        ]
+      },
+      "SeoArtifact": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "filename": { "type": "string" },
+          "content": { "type": "string" },
+          "language": { "type": "string" }
+        }
+      },
+      "SeoArtifactResponse": {
+        "type": "object",
+        "properties": {
+          "artifact": { "$ref": "#/components/schemas/SeoArtifact" }
+        }
+      },
+      "SeoBundleResponse": {
+        "type": "object",
+        "properties": {
+          "bundle": {
+            "type": "object",
+            "properties": {
+              "artifacts": { "type": "array", "items": { "$ref": "#/components/schemas/SeoArtifact" } },
+              "generatedAt": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      },
+      "SeoTypesResponse": {
+        "type": "object",
+        "properties": {
+          "types": { "type": "object", "description": "Map of type IDs to descriptions" }
+        }
+      },
+      "SecurityInput": {
+        "type": "object",
+        "required": ["siteName", "siteUrl"],
+        "properties": {
+          "siteName": { "type": "string", "description": "Site or app name" },
+          "siteUrl": { "type": "string", "description": "Full site URL (e.g. https://example.com)" },
+          "framework": { "type": "string", "enum": ["express", "nextjs"], "description": "Target framework for generated code", "default": "express" },
+          "authStrategy": { "type": "string", "enum": ["jwt", "session"], "description": "Authentication strategy", "default": "jwt" },
+          "apiUrl": { "type": "string", "description": "API URL for CORS configuration" }
+        }
+      },
+      "SecurityGenerateRequest": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SecurityInput" },
+          {
+            "type": "object",
+            "required": ["type"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["csp", "cors", "auth", "rate-limit", "validation", "security-headers"],
+                "description": "Type of security artifact to generate"
+              }
+            }
+          }
+        ]
+      },
+      "SecurityBundleRequest": {
+        "allOf": [
+          { "$ref": "#/components/schemas/SecurityInput" },
+          {
+            "type": "object",
+            "required": ["types"],
+            "properties": {
+              "types": {
+                "type": "array",
+                "items": { "type": "string", "enum": ["csp", "cors", "auth", "rate-limit", "validation", "security-headers"] },
+                "description": "Array of artifact types to generate"
+              }
+            }
+          }
+        ]
+      },
+      "SecurityArtifact": {
+        "type": "object",
+        "properties": {
+          "type": { "type": "string" },
+          "filename": { "type": "string" },
+          "content": { "type": "string" },
+          "language": { "type": "string" }
+        }
+      },
+      "SecurityArtifactResponse": {
+        "type": "object",
+        "properties": {
+          "artifact": { "$ref": "#/components/schemas/SecurityArtifact" }
+        }
+      },
+      "SecurityBundleResponse": {
+        "type": "object",
+        "properties": {
+          "bundle": {
+            "type": "object",
+            "properties": {
+              "artifacts": { "type": "array", "items": { "$ref": "#/components/schemas/SecurityArtifact" } },
+              "generatedAt": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      },
+      "SecurityTypesResponse": {
+        "type": "object",
+        "properties": {
+          "types": { "type": "object", "description": "Map of type IDs to descriptions" },
+          "frameworks": { "type": "object", "description": "Map of framework IDs to descriptions" },
+          "authStrategies": { "type": "object", "description": "Map of auth strategy IDs to descriptions" }
         }
       }
     }
