@@ -203,6 +203,99 @@ async function handleManifest(url: URL): Promise<Response> {
   return json(JSON.parse(b.generateManifest(name)));
 }
 
+async function handleLetterhead(req: Request): Promise<Response> {
+  const body = await parseBody<{
+    companyName: string; tagline?: string; address?: string; phone?: string;
+    email?: string; website?: string; primaryColor?: string; fontFamily?: string; fontCategory?: string;
+  }>(req);
+  if (!body?.companyName) return error('Missing required field: companyName');
+
+  const result = brand.generateLetterhead({
+    companyName: body.companyName,
+    tagline: body.tagline,
+    address: body.address,
+    phone: body.phone,
+    email: body.email,
+    website: body.website,
+    colors: { primary: body.primaryColor || '#6366f1' },
+    font: { family: body.fontFamily || 'Inter', category: body.fontCategory || 'sans-serif' },
+  });
+  return json(result);
+}
+
+async function handleAppIcon(req: Request): Promise<Response> {
+  const body = await parseBody<{
+    iconId: string; iconColor?: string; backgroundColor?: string;
+    borderRadius?: number; padding?: number; gradientFrom?: string; gradientTo?: string;
+  }>(req);
+  if (!body?.iconId) return error('Missing required field: iconId');
+
+  const iconSvg = await brand.fetchIconSvg(body.iconId);
+  if (!iconSvg) return error(`Icon not found: ${body.iconId}`, 404);
+
+  const result = brand.generateAppIcon({
+    iconSvg,
+    iconColor: body.iconColor || '#ffffff',
+    backgroundColor: body.backgroundColor || '#6366f1',
+    borderRadius: body.borderRadius ?? 22,
+    padding: body.padding ?? 20,
+    gradient: body.gradientFrom && body.gradientTo ? { from: body.gradientFrom, to: body.gradientTo } : undefined,
+  });
+  return json({ svg: result.svg, htmlSnippet: result.htmlSnippet, manifestEntry: result.manifestEntry, sizeCount: result.sizes.length });
+}
+
+async function handleBrandGuidelines(req: Request): Promise<Response> {
+  const body = await parseBody<{
+    companyName: string; tagline?: string; description?: string;
+    primaryColor?: string; letterColors?: string[];
+    fontFamily?: string; fontWeight?: number; fontCategory?: string;
+  }>(req);
+  if (!body?.companyName) return error('Missing required field: companyName');
+
+  const result = brand.generateBrandGuidelines({
+    companyName: body.companyName,
+    tagline: body.tagline,
+    description: body.description,
+    colors: {
+      name: 'brand',
+      iconColor: body.primaryColor || '#6366f1',
+      letterColors: body.letterColors?.length ? body.letterColors : [body.primaryColor || '#6366f1'],
+    },
+    font: {
+      family: body.fontFamily || 'Inter',
+      weight: body.fontWeight || 700,
+      category: (body.fontCategory as any) || 'sans-serif',
+    },
+  });
+  return json(result);
+}
+
+async function handleEmailSignature(req: Request): Promise<Response> {
+  const body = await parseBody<{
+    name: string; title?: string; companyName: string;
+    email?: string; phone?: string; website?: string;
+    linkedin?: string; twitter?: string;
+    primaryColor?: string; fontFamily?: string; fontCategory?: string; photoUrl?: string;
+  }>(req);
+  if (!body?.name) return error('Missing required field: name');
+  if (!body?.companyName) return error('Missing required field: companyName');
+
+  const result = brand.generateEmailSignature({
+    name: body.name,
+    title: body.title,
+    companyName: body.companyName,
+    email: body.email,
+    phone: body.phone,
+    website: body.website,
+    linkedin: body.linkedin,
+    twitter: body.twitter,
+    colors: { primary: body.primaryColor || '#6366f1' },
+    font: { family: body.fontFamily || 'Inter', category: body.fontCategory || 'sans-serif' },
+    photoUrl: body.photoUrl,
+  });
+  return json(result);
+}
+
 // --- Main router ---
 
 export default async function handler(req: Request): Promise<Response> {
@@ -242,6 +335,18 @@ export default async function handler(req: Request): Promise<Response> {
     case 'placeholder':
       if (req.method !== 'POST') return error('Method not allowed', 405);
       return handlePlaceholder(req);
+    case 'letterhead':
+      if (req.method !== 'POST') return error('Method not allowed', 405);
+      return handleLetterhead(req);
+    case 'app-icon':
+      if (req.method !== 'POST') return error('Method not allowed', 405);
+      return handleAppIcon(req);
+    case 'guidelines':
+      if (req.method !== 'POST') return error('Method not allowed', 405);
+      return handleBrandGuidelines(req);
+    case 'email-signature':
+      if (req.method !== 'POST') return error('Method not allowed', 405);
+      return handleEmailSignature(req);
     case 'meta/og-tags':
       return handleOgTags();
     case 'meta/manifest':

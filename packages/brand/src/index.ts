@@ -86,6 +86,22 @@ export { buildFaviconSvg, buildIcoFile, generateManifest, generateHtmlSnippet } 
 // Social Cards (meta tags only — rendering is browser-dependent)
 export { generateOgMetaTags } from './social-card';
 
+// Letterhead
+export { generateLetterhead, letterheadFromLogo } from './letterhead';
+export type { LetterheadConfig, LetterheadResult } from './letterhead';
+
+// App Icon
+export { generateAppIcon, appIconFromLogo } from './app-icon';
+export type { AppIconConfig, AppIconResult, AppIconSize } from './app-icon';
+
+// Brand Guidelines
+export { generateBrandGuidelines, guidelinesFromLogo } from './brand-guidelines';
+export type { BrandGuidelinesConfig, BrandGuidelinesResult } from './brand-guidelines';
+
+// Email Signature
+export { generateEmailSignature, emailSignatureFromLogo } from './email-signature';
+export type { EmailSignatureConfig, EmailSignatureResult } from './email-signature';
+
 // Design Tokens
 export {
   generateCssVariables,

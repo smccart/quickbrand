@@ -23,12 +23,14 @@ const SERVICES = [
     title: 'SEO Config',
     description: 'Meta tags, sitemaps, robots.txt, and Schema.org structured data — ready to paste.',
     to: '/seo',
+    live: true,
   },
   {
     icon: Shield,
     title: 'Security',
     description: 'CSP headers, CORS configs, and auth scaffolds. Security best practices from the start.',
     to: '/security',
+    live: true,
   },
 ];
 

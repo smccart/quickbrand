@@ -46,6 +46,18 @@ cat > .vercel/output/functions/api/seo.func/.vc-config.json << 'VCEOF'
 }
 VCEOF
 
+# Bundle Security API function
+mkdir -p .vercel/output/functions/api/security.func
+npx esbuild api/_security-wrapper.ts --bundle --platform=node --format=cjs --outfile=.vercel/output/functions/api/security.func/index.js
+
+cat > .vercel/output/functions/api/security.func/.vc-config.json << 'VCEOF'
+{
+  "runtime": "nodejs20.x",
+  "handler": "index.js",
+  "launcherType": "Nodejs"
+}
+VCEOF
+
 # Build Output API config with rewrites
 cat > .vercel/output/config.json << 'CFGEOF'
 {
@@ -54,6 +66,7 @@ cat > .vercel/output/config.json << 'CFGEOF'
     { "src": "/api/brand/(.*)", "dest": "/api/brand" },
     { "src": "/api/legal/(.*)", "dest": "/api/legal" },
     { "src": "/api/seo/(.*)", "dest": "/api/seo" },
+    { "src": "/api/security/(.*)", "dest": "/api/security" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]

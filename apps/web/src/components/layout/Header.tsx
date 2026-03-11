@@ -9,7 +9,7 @@ const NAV_ITEMS = [
   { label: 'Placeholders', to: '/placeholders' },
   { label: 'Legal', to: '/legal' },
   { label: 'SEO', to: '/seo' },
-  { label: 'Security', to: '/security', comingSoon: true },
+  { label: 'Security', to: '/security' },
 ];
 
 export function Header() {
@@ -36,11 +36,6 @@ export function Header() {
               }`}
             >
               {item.label}
-              {item.comingSoon && (
-                <span className="ml-1.5 text-[10px] uppercase tracking-wider text-muted-foreground bg-muted px-1.5 py-0.5 rounded-full">
-                  Soon
-                </span>
-              )}
             </Link>
           ))}
         </nav>

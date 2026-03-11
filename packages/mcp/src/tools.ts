@@ -19,12 +19,18 @@ import {
   searchIcons,
   generatePlaceholder,
   generateFreepikIcon,
+  generateLetterhead,
+  generateAppIcon,
+  generateBrandGuidelines,
+  generateEmailSignature,
 } from '@fetchkit/brand';
 import type { ColorHarmony, LayoutDirection, ColorMode, PlaceholderCategory } from '@fetchkit/brand';
 import { generateDocument, generateBundle, LEGAL_DOC_TYPES } from '@fetchkit/legal';
 import type { LegalDocType } from '@fetchkit/legal';
 import { generateArtifact, generateBundle as generateSeoBundle, SEO_ARTIFACT_TYPES } from '@fetchkit/seo';
 import type { SeoArtifactType } from '@fetchkit/seo';
+import { generateArtifact as generateSecurityArtifact, generateBundle as generateSecurityBundle, SECURITY_ARTIFACT_TYPES, APP_FRAMEWORKS, AUTH_STRATEGIES } from '@fetchkit/security';
+import type { SecurityArtifactType } from '@fetchkit/security';
 
 function textResult(data: unknown): { content: Array<{ type: 'text'; text: string }> } {
   return {
@@ -213,6 +219,132 @@ export function registerTools(server: McpServer): void {
     return textResult({ icon });
   });
 
+  // 9. Generate letterhead
+  server.registerTool('generate_letterhead', {
+    title: 'Generate Letterhead',
+    description:
+      'Generate an SVG letterhead template with header HTML, footer HTML, and print CSS for professional documents.',
+    inputSchema: {
+      companyName: z.string().describe('Company name'),
+      tagline: z.string().optional().describe('Company tagline'),
+      address: z.string().optional().describe('Company address'),
+      phone: z.string().optional().describe('Phone number'),
+      email: z.string().optional().describe('Contact email'),
+      website: z.string().optional().describe('Website URL'),
+      primaryColor: z.string().default('#6366f1').describe('Primary brand color (hex)'),
+      fontFamily: z.string().default('Inter').describe('Font family name'),
+      fontCategory: z.string().default('sans-serif').describe('Font category'),
+    },
+  }, async (args) => {
+    const result = generateLetterhead({
+      companyName: args.companyName,
+      tagline: args.tagline,
+      address: args.address,
+      phone: args.phone,
+      email: args.email,
+      website: args.website,
+      colors: { primary: args.primaryColor },
+      font: { family: args.fontFamily, category: args.fontCategory },
+    });
+    return textResult(result);
+  });
+
+  // 9b. Generate app icon
+  server.registerTool('generate_app_icon', {
+    title: 'Generate App Icon',
+    description:
+      'Generate app icons in all standard sizes (16-1024px) with optional gradient backgrounds. Returns SVGs, manifest entry, and HTML snippet.',
+    inputSchema: {
+      iconId: z.string().describe('Iconify icon ID (e.g. mdi:rocket-launch)'),
+      iconColor: z.string().default('#ffffff').describe('Icon color (hex)'),
+      backgroundColor: z.string().default('#6366f1').describe('Background color (hex)'),
+      borderRadius: z.number().default(22).describe('Border radius percentage (0-50)'),
+      padding: z.number().default(20).describe('Padding percentage (0-50)'),
+      gradientFrom: z.string().optional().describe('Gradient start color (hex)'),
+      gradientTo: z.string().optional().describe('Gradient end color (hex)'),
+    },
+  }, async (args) => {
+    const iconSvg = await fetchIconSvg(args.iconId);
+    if (!iconSvg) {
+      return textResult({ error: `Icon not found: ${args.iconId}` });
+    }
+    const result = generateAppIcon({
+      iconSvg,
+      iconColor: args.iconColor,
+      backgroundColor: args.backgroundColor,
+      borderRadius: args.borderRadius,
+      padding: args.padding,
+      gradient: args.gradientFrom && args.gradientTo ? { from: args.gradientFrom, to: args.gradientTo } : undefined,
+    });
+    return textResult({ svg: result.svg, htmlSnippet: result.htmlSnippet, manifestEntry: result.manifestEntry, sizeCount: result.sizes.length });
+  });
+
+  // 9c. Generate brand guidelines
+  server.registerTool('generate_brand_guidelines', {
+    title: 'Generate Brand Guidelines',
+    description:
+      'Generate a comprehensive brand guidelines document in Markdown with color table, typography snippet, and usage rules.',
+    inputSchema: {
+      companyName: z.string().describe('Company name'),
+      tagline: z.string().optional().describe('Company tagline'),
+      description: z.string().optional().describe('Brand description'),
+      primaryColor: z.string().default('#6366f1').describe('Primary brand color (hex)'),
+      letterColors: z.array(z.string()).default([]).describe('Additional brand colors'),
+      fontFamily: z.string().default('Inter').describe('Primary font family'),
+      fontWeight: z.number().default(700).describe('Primary font weight'),
+      fontCategory: z.enum(['serif', 'sans-serif', 'display', 'handwriting', 'monospace']).default('sans-serif'),
+    },
+  }, async (args) => {
+    const result = generateBrandGuidelines({
+      companyName: args.companyName,
+      tagline: args.tagline,
+      description: args.description,
+      colors: {
+        name: 'brand',
+        iconColor: args.primaryColor,
+        letterColors: args.letterColors.length ? args.letterColors : [args.primaryColor],
+      },
+      font: { family: args.fontFamily, weight: args.fontWeight, category: args.fontCategory },
+    });
+    return textResult(result);
+  });
+
+  // 9d. Generate email signature
+  server.registerTool('generate_email_signature', {
+    title: 'Generate Email Signature',
+    description:
+      'Generate a professional HTML email signature with plain text fallback. Table-based layout for email client compatibility.',
+    inputSchema: {
+      name: z.string().describe('Person name'),
+      title: z.string().optional().describe('Job title'),
+      companyName: z.string().describe('Company name'),
+      email: z.string().optional().describe('Email address'),
+      phone: z.string().optional().describe('Phone number'),
+      website: z.string().optional().describe('Website URL'),
+      linkedin: z.string().optional().describe('LinkedIn profile URL'),
+      twitter: z.string().optional().describe('Twitter handle'),
+      primaryColor: z.string().default('#6366f1').describe('Brand color (hex)'),
+      fontFamily: z.string().default('Inter').describe('Font family'),
+      fontCategory: z.string().default('sans-serif').describe('Font category'),
+      photoUrl: z.string().optional().describe('Profile photo URL'),
+    },
+  }, async (args) => {
+    const result = generateEmailSignature({
+      name: args.name,
+      title: args.title,
+      companyName: args.companyName,
+      email: args.email,
+      phone: args.phone,
+      website: args.website,
+      linkedin: args.linkedin,
+      twitter: args.twitter,
+      colors: { primary: args.primaryColor },
+      font: { family: args.fontFamily, category: args.fontCategory },
+      photoUrl: args.photoUrl,
+    });
+    return textResult(result);
+  });
+
   // 10. Generate legal document
   const legalDocTypes = Object.keys(LEGAL_DOC_TYPES) as LegalDocType[];
   const legalTypeEnum = z.enum(legalDocTypes as [string, ...string[]]);
@@ -338,6 +470,63 @@ export function registerTools(server: McpServer): void {
     },
   }, async (args) => {
     const bundle = generateSeoBundle(args.types as SeoArtifactType[], args);
+    return textResult(bundle);
+  });
+
+  // 14. Generate security artifact
+  const securityArtifactTypes = Object.keys(SECURITY_ARTIFACT_TYPES) as SecurityArtifactType[];
+  const securityTypeEnum = z.enum(securityArtifactTypes as [string, ...string[]]);
+  const frameworkEnum = z.enum(Object.keys(APP_FRAMEWORKS) as [string, ...string[]]);
+  const authStrategyEnum = z.enum(Object.keys(AUTH_STRATEGIES) as [string, ...string[]]);
+
+  server.registerTool('generate_security_artifact', {
+    title: 'Generate Security Artifact',
+    description:
+      'Generate a single security artifact: CSP header, CORS config, security headers, auth scaffold, env template, or rate limiter.',
+    inputSchema: {
+      type: securityTypeEnum.describe('Artifact type to generate'),
+      siteName: z.string().describe('Site or company name'),
+      siteUrl: z.string().describe('Site URL (e.g. https://example.com)'),
+      framework: frameworkEnum.default('generic').describe('Target framework (express, nextjs, fastify, hono, generic)'),
+      appType: z.enum(['website', 'saas', 'api', 'mobile-backend']).default('website').describe('Type of application'),
+      authStrategy: authStrategyEnum.default('jwt').describe('Authentication strategy (jwt, session, oauth2, api-key)'),
+      corsOrigins: z.array(z.string()).optional().describe('Allowed CORS origins'),
+    },
+  }, async (args) => {
+    const artifact = generateSecurityArtifact(args.type as SecurityArtifactType, {
+      siteName: args.siteName,
+      siteUrl: args.siteUrl,
+      framework: args.framework as any,
+      appType: args.appType,
+      authStrategy: args.authStrategy as any,
+      corsConfig: args.corsOrigins ? { origins: args.corsOrigins } : undefined,
+    });
+    return textResult(artifact);
+  });
+
+  // 15. Generate security bundle
+  server.registerTool('generate_security_bundle', {
+    title: 'Generate Security Bundle',
+    description:
+      'Generate multiple security artifacts at once (CSP, CORS, headers, auth, env, rate limit).',
+    inputSchema: {
+      types: z.array(securityTypeEnum).describe('Artifact types to generate'),
+      siteName: z.string().describe('Site or company name'),
+      siteUrl: z.string().describe('Site URL'),
+      framework: frameworkEnum.default('generic').describe('Target framework'),
+      appType: z.enum(['website', 'saas', 'api', 'mobile-backend']).default('website').describe('Type of application'),
+      authStrategy: authStrategyEnum.default('jwt').describe('Authentication strategy'),
+      corsOrigins: z.array(z.string()).optional().describe('Allowed CORS origins'),
+    },
+  }, async (args) => {
+    const bundle = generateSecurityBundle(args.types as SecurityArtifactType[], {
+      siteName: args.siteName,
+      siteUrl: args.siteUrl,
+      framework: args.framework as any,
+      appType: args.appType,
+      authStrategy: args.authStrategy as any,
+      corsConfig: args.corsOrigins ? { origins: args.corsOrigins } : undefined,
+    });
     return textResult(bundle);
   });
 }

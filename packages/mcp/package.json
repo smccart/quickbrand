@@ -17,6 +17,7 @@
     "@fetchkit/brand": "workspace:*",
     "@fetchkit/legal": "workspace:*",
     "@fetchkit/seo": "workspace:*",
+    "@fetchkit/security": "workspace:*",
     "@modelcontextprotocol/sdk": "^1.12.0",
     "zod": "^3.25.0"
   },

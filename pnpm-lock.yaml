@@ -24,6 +24,9 @@ importers:
       '@fetchkit/legal':
         specifier: workspace:*
         version: link:../../packages/legal
+      '@fetchkit/security':
+        specifier: workspace:*
+        version: link:../../packages/security
       '@fetchkit/seo':
         specifier: workspace:*
         version: link:../../packages/seo
@@ -164,6 +167,9 @@ importers:
       '@fetchkit/legal':
         specifier: workspace:*
         version: link:../legal
+      '@fetchkit/security':
+        specifier: workspace:*
+        version: link:../security
       '@fetchkit/seo':
         specifier: workspace:*
         version: link:../seo
@@ -180,6 +186,21 @@ importers:
       typescript:
         specifier: ~5.9.3
         version: 5.9.3
+
+  packages/security:
+    devDependencies:
+      '@fetchkit/tsconfig':
+        specifier: workspace:*
+        version: link:../tsconfig
+      typescript:
+        specifier: ~5.9.3
+        version: 5.9.3
+      vite:
+        specifier: ^7.3.1
+        version: 7.3.1(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.31.1)
+      vite-plugin-dts:
+        specifier: ^4.5.4
+        version: 4.5.4(@types/node@24.11.0)(rollup@4.59.0)(typescript@5.9.3)(vite@7.3.1(@types/node@24.11.0)(jiti@2.6.1)(lightningcss@1.31.1))
 
   packages/seo:
     devDependencies:
