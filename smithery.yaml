@@ -1,0 +1,18 @@
+# Smithery configuration for @fetchkit/mcp
+# https://smithery.ai
+
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    properties:
+      FREEPIK_API_KEY:
+        type: string
+        description: "Optional API key for AI icon generation via Freepik"
+    required: []
+  commandFunction: |-
+    (config) => ({
+      command: 'npx',
+      args: ['@fetchkit/mcp'],
+      env: config.FREEPIK_API_KEY ? { FREEPIK_API_KEY: config.FREEPIK_API_KEY } : {}
+    })
